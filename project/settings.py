@@ -12,6 +12,8 @@ SECRET_KEY = "%ppjxiq8eyx=rj(0s(rzgziq&f@h0i!@gi1v1f2pw@yi4+an%0"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+AUTH_USER_MODEL = "user.User"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -22,6 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+     'user',
 ]
 
 MIDDLEWARE = [
