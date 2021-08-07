@@ -16,6 +16,8 @@ urlpatterns = [
     # User management
     path("users/", include("pwa_store_backend.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
+    # path('organizations/', include('pwa_store_backend.organizations.urls', namespace="organizations")),
+    # path('pwas/', include('pwa_store_backend.pwas.urls', namespace="pwas")),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

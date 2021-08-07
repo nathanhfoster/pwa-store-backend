@@ -2,8 +2,7 @@ from .models import Organization
 from django.db.models import F
 from rest_framework import viewsets, permissions, pagination
 from rest_framework.permissions import AllowAny
-from .serializers import OrganizationSerializer
-
+from api.serializers import OrganizationSerializer
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
