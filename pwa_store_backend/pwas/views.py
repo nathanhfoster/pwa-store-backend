@@ -1,8 +1,8 @@
-from .models import Organization
+from .models import Pwa
 from django.db.models import F
 from rest_framework import viewsets, permissions, pagination
 from rest_framework.permissions import AllowAny
-from .serializers import OrganizationSerializer
+from .serializers import PwaSerializer
 
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
@@ -17,10 +17,10 @@ class LargeResultsSetPagination(pagination.PageNumberPagination):
     max_page_size = 1000
 
 
-class OrganizationView(viewsets.ModelViewSet):
-    serializer_class = OrganizationSerializer
+class PwaView(viewsets.ModelViewSet):
+    serializer_class = PwaSerializer
     pagination_class = StandardResultsSetPagination
-    queryset = Organization.objects.all()
+    queryset = Pwa.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_permissions(self):
@@ -30,4 +30,4 @@ class OrganizationView(viewsets.ModelViewSet):
         if self.request.method == 'PATCH':
             self.permission_classes = (
                 permissions.IsAuthenticated,)
-        return super(OrganizationView, self).get_permissions()
+        return super(PwaView, self).get_permissions()
