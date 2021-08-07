@@ -78,6 +78,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "pwa_store_backend.users.apps.UsersConfig",
+    "pwa_store_backend.organizations.apps.OrganizationsConfig",
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
