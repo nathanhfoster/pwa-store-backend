@@ -62,7 +62,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
     "DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", default=True
 )
 
-# STORAGES
+# STORAGES white noise config
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 COMPRESS_URL = STATIC_URL
 COMPRESS_OFFLINE = True 
