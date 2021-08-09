@@ -63,6 +63,9 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 )
 
 # STORAGES
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+COMPRESS_URL = STATIC_URL
+COMPRESS_OFFLINE = True 
 # ------------------------------------------------------------------------------
 # https://django-storages.readthedocs.io/en/latest/#installation
 # INSTALLED_APPS += ["storages"]  # noqa F405
@@ -88,7 +91,6 @@ SECURE_CONTENT_TYPE_NOSNIFF = env.bool(
 # STATIC
 # ------------------------
 # STATICFILES_STORAGE = "pwa_store_backend.utils.storages.StaticRootS3Boto3Storage"
-# COLLECTFAST_STRATEGY = "collectfast.strategies.boto3.Boto3Strategy"
 # STATIC_URL = f"https://{aws_s3_domain}/static/"
 # MEDIA
 # ------------------------------------------------------------------------------
@@ -140,11 +142,6 @@ INSTALLED_APPS += ["anymail"]  # noqa F405
 #     "MAILGUN_SENDER_DOMAIN": env("MAILGUN_DOMAIN"),
 #     "MAILGUN_API_URL": env("MAILGUN_API_URL", default="https://api.mailgun.net/v3"),
 # }
-
-# Collectfast
-# ------------------------------------------------------------------------------
-# https://github.com/antonagestam/collectfast#installation
-# INSTALLED_APPS = ["collectfast"] + INSTALLED_APPS  # noqa F405
 
 # LOGGING
 # ------------------------------------------------------------------------------
