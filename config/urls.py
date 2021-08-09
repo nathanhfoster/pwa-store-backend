@@ -19,7 +19,7 @@ urlpatterns = [
     # path('organizations/', include('pwa_store_backend.organizations.urls', namespace="organizations")),
     # path('pwas/', include('pwa_store_backend.pwas.urls', namespace="pwas")),
     # Your stuff: custom urls includes go here
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 
 # API URLS
