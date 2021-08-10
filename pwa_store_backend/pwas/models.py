@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from organizations.models import Organization
+from pwa_store_backend.organizations.models import Organization
 
 class Tag(models.Model):
     name = models.CharField(max_length=250)

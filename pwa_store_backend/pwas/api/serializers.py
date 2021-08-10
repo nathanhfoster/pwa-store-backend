@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models import Pwa, Tag
+from ..models import Pwa, Tag
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:

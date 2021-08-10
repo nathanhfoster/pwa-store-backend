@@ -78,8 +78,8 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     "pwa_store_backend.users.apps.UsersConfig",
-    "pwa_store_backend.organizations.apps.OrganizationsConfig",
-    "pwa_store_backend.pwas.apps.PwasConfig",
+    "pwa_store_backend.organizations",
+    "pwa_store_backend.pwas"
     # Your stuff: custom apps go here
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
@@ -229,7 +229,7 @@ EMAIL_TIMEOUT = 5
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL.
-ADMIN_URL = "admin/"
+ADMIN_URL = "system-admin/"
 # https://docs.djangoproject.com/en/dev/ref/settings/#admins
 ADMINS = [("""Nabin Bhusal""", "nabinbhusal80@gmail.com")]
 # https://docs.djangoproject.com/en/dev/ref/settings/#managers
