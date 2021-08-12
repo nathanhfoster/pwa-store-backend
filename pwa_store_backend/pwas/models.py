@@ -12,7 +12,6 @@ class Tag(models.Model):
         return self.name
 
     class Meta:
-        # app_label = 'pwa.tags'
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
         ordering = ('-name',)
