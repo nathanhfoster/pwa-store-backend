@@ -16,6 +16,7 @@ class Tag(models.Model):
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
         ordering = ('-name',)
+        unique_together = ['name']
 
 class Pwa(models.Model):
     name = models.CharField(max_length=250)
