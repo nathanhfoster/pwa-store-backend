@@ -24,12 +24,12 @@ class Pwa(models.Model):
     slug = models.SlugField(null=True)
     organization = models.ForeignKey(
         Organization,
-        related_name='pwaOwner',
+        related_name='organization',
         on_delete=models.CASCADE,)
 
     tags = models.ManyToManyField(
         Tag,
-        related_name='pwaTags',)
+        related_name='tags',)
 
     description = models.TextField(max_length=1000)
     views = models.PositiveIntegerField(default=0)
@@ -40,6 +40,10 @@ class Pwa(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_tags(self):
+        tags = self.tags.all()
+        return ",\n".join([t.name for t in tags])
 
     class Meta:
         verbose_name = 'Pwa'
