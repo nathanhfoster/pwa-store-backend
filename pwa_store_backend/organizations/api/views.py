@@ -1,23 +1,32 @@
-from rest_framework import status
-from rest_framework.decorators import action
-from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin
-from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
-
 from ..models import Organization
+from django.db.models import F
+from rest_framework import viewsets, permissions, pagination
+from rest_framework.permissions import AllowAny
 from .serializers import OrganizationSerializer
 
-class OrganizationViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericViewSet):
+class StandardResultsSetPagination(pagination.PageNumberPagination):
+    page_size = 25
+    page_size_query_param = 'page_size'
+    max_page_size = 500
+
+
+class LargeResultsSetPagination(pagination.PageNumberPagination):
+    page_size = 50
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+
+class OrganizationViewSet(viewsets.ModelViewSet):
     serializer_class = OrganizationSerializer
+    pagination_class = StandardResultsSetPagination
     queryset = Organization.objects.all()
-    lookup_field = "name"
+    permission_classes = (permissions.IsAuthenticated,)
 
-    def get_queryset(self, *args, **kwargs):
-        return self.queryset.filter(id=self.request.user.id)
-
-    @action(detail=False, methods=["GET"])
-    def me(self, request):
-        serializer = OrganizationSerializer(request.user, context={"request": request})
-        return Response(status=status.HTTP_200_OK, data=serializer.data)
-
- 
+    def get_permissions(self):
+        # allow an authenticated user to create via POST
+        if self.request.method == 'GET':
+            self.permission_classes = (AllowAny,)
+        if self.request.method == 'PATCH':
+            self.permission_classes = (
+                permissions.IsAuthenticated,)
+        return super(OrganizationViewSet, self).get_permissions()
