@@ -19,7 +19,7 @@ class Tag(models.Model):
         unique_together = ['name']
 
 class Pwa(models.Model):
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=50)
     url = models.CharField(max_length=250)
     slug = models.SlugField(null=True)
     organization = models.ForeignKey(
@@ -31,7 +31,8 @@ class Pwa(models.Model):
         Tag,
         related_name='tags',)
 
-    description = models.TextField(max_length=1000)
+    short_description = models.CharField(max_length=80, null=True, blank=True)
+    description = models.TextField(max_length=1000, null=True, blank=True)
     views = models.PositiveIntegerField(default=0)
     launches = models.PositiveIntegerField(default=0)
 

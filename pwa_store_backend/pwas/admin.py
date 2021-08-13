@@ -12,18 +12,19 @@ class PwaResource(ModelResource):
         model = Pwa
         import_id_fields = ('id', 'name',)
         fields = ('id', 'name', 'url', 'slug',
-                  'organization', 'tags', 'description',
+                  'organization', 'tags', 'short_description', 'description',
                   'views', 'launches', 'date_created', 'last_modified',)
+        widgets = { 'organization': { 'field': 'pk' }, 'tags': { 'field': 'name' }, }
 
 class PwaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = PwaResource
 
     list_display = ('id', 'name', 'url', 'slug',
-                    'organization', 'get_tags', 'description',
+                    'organization', 'get_tags', 'short_description', 'description',
                     'views', 'launches', 'date_created', 'last_modified',)
     list_display_links = ('id', 'name', 'organization', )
     search_fields = ('id', 'name', 'url', 'slug',
-                    'organization__name', 'tags__name', 'description',
+                    'organization__name', 'tags__name', 'short_description', 'description',
                     'views', 'launches')
     # autocomplete_fields = ('organization', )
 
@@ -32,7 +33,7 @@ class TagResource(ModelResource):
         model = Tag
         import_id_fields = ('id', 'name',)
         fields = ('id', 'name', 'date_created', 'last_modified',)
-        # widgets = {"tags": {"field": "name"}}
+        # widgets = {'tags': {'field': 'name'}}
 
 class TagAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = TagResource

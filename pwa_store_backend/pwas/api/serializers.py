@@ -24,6 +24,6 @@ class PwaSerializer(serializers.ModelSerializer):
     ratings = RatingsField(many=True,  read_only=True, required=False)
     class Meta:
         model = Pwa
-        fields = ('id', 'name', 'description', 'views', 'launches', 'ratings', 'organization', 'tags', 'last_modified')
+        fields = ('id', 'name', 'short_description', 'description', 'views', 'launches', 'ratings', 'organization', 'tags', 'last_modified')
         read_only_fields = ('id', 'date_created', 'last_modified')
         
