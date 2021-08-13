@@ -12,7 +12,7 @@ class PwaResource(ModelResource):
         model = Pwa
         import_id_fields = ('id', 'name',)
         fields = ('id', 'name', 'url', 'slug',
-                  'organization', 'tags', 'short_description', 'description',
+                  'organization', 'tags', 'icon_url', 'short_description', 'description',
                   'views', 'launches', 'date_created', 'last_modified',)
         widgets = { 'organization': { 'field': 'pk' }, 'tags': { 'field': 'name' }, }
 
@@ -20,7 +20,7 @@ class PwaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = PwaResource
 
     list_display = ('id', 'name', 'url', 'slug',
-                    'organization', 'get_tags', 'short_description', 'description',
+                    'organization', 'get_tags', 'icon_url', 'short_description', 'description',
                     'views', 'launches', 'date_created', 'last_modified',)
     list_display_links = ('id', 'name', 'organization', )
     search_fields = ('id', 'name', 'url', 'slug',

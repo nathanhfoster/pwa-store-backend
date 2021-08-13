@@ -31,6 +31,7 @@ class Pwa(models.Model):
         Tag,
         related_name='tags',)
 
+    icon_url = models.CharField(max_length=250, null=True, blank=True)
     short_description = models.CharField(max_length=80, null=True, blank=True)
     description = models.TextField(max_length=1000, null=True, blank=True)
     views = models.PositiveIntegerField(default=0)
