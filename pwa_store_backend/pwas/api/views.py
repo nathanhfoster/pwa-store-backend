@@ -1,9 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.db.models import Q
 
 from ..models import Pwa, Rating, Tag
-from django.db.models import F
 from rest_framework import viewsets, status, permissions, pagination
 from .serializers import PwaSerializer, RatingSerializer, TagSerializer
 from rest_framework.permissions import AllowAny
@@ -11,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 import requests
-import json
+
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
@@ -59,6 +57,7 @@ class RatingViewSet(viewsets.ModelViewSet):
         serializer = TagSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+
 class PwaViewSet(viewsets.ModelViewSet):
     serializer_class = PwaSerializer
     pagination_class = StandardResultsSetPagination
@@ -76,7 +75,7 @@ class PwaViewSet(viewsets.ModelViewSet):
     # def me(self, request):
     #     serializer = PwaSerializer(request.user, context={"request": request})
     #     return Response(status=status.HTTP_200_OK, data=serializer.data)
-    
+
     # @action(methods=['GET'], detail=False, url_path='search', url_name='pwa_search')
     # def search(self, request, *args, **kwargs):
     #     key = self.request.GET.get('key', '')
@@ -98,7 +97,7 @@ class PwaViewSet(viewsets.ModelViewSet):
                 permissions.IsAuthenticated,)
         return super(PwaViewSet, self).get_permissions()
 
-    @action(methods=['get'], detail=False, url_path="get-manifest", url_name="get_manifest", permission_classes=[AllowAny,])
+    @action(methods=['get'], detail=False, url_path="get-manifest", url_name="get_manifest", permission_classes=[AllowAny, ])
     def get_manifest(self, request):
         try:
             url = request.query_params.get('url')

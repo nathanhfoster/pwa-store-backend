@@ -1,8 +1,9 @@
 from django.db import models
 from django.conf import settings
 from pwa_store_backend.organizations.models import Organization
-from django.core.validators import MaxValueValidator, MinValueValidator 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
+
 
 class Tag(TimeStampAbstractModel):
     name = models.CharField(max_length=250)
@@ -34,7 +35,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     icon_url = models.CharField(max_length=250, null=True, blank=True)
     short_description = models.CharField(max_length=80, null=True, blank=True)
     description = models.TextField(max_length=1000, null=True, blank=True)
-    published = models.BooleanField(default=False) # to filter whether to show pwa in the marketplace
+    published = models.BooleanField(default=False)  # to filter whether to show pwa in the marketplace
 
     def __str__(self):
         return self.name

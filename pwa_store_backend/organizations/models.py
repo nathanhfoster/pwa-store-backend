@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
 
+
 class Organization(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = models.CharField(max_length=250)
     slug = models.SlugField(null=True)
@@ -16,11 +17,10 @@ class Organization(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractM
 
     def __str__(self):
         return self.name
-    
+
     def get_contributors(self):
         contributors = self.contributors.all()
         return ",\n".join([c.name for c in contributors])
-
 
     class Meta:
         # app_label = 'organizations'

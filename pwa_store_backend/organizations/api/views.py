@@ -4,6 +4,7 @@ from rest_framework import viewsets, permissions, pagination
 from rest_framework.permissions import AllowAny
 from .serializers import OrganizationSerializer
 
+
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
     page_size_query_param = 'page_size'

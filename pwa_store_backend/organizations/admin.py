@@ -6,6 +6,7 @@ from import_export.resources import ModelResource
 from import_export.admin import ImportExportActionModelAdmin
 from import_export.widgets import ManyToManyWidget
 
+
 class OrganizationResource(ModelResource):
     contributors = Field(widget=ManyToManyWidget(settings.AUTH_USER_MODEL))
 
@@ -16,6 +17,7 @@ class OrganizationResource(ModelResource):
                   'contributors', 'description',
                   'created_at', 'updated_at',)
 
+
 class OrganizationAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = OrganizationResource
 
@@ -23,11 +25,12 @@ class OrganizationAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
                     'get_contributors', 'description',
                     'created_at', 'updated_at',)
     list_display_links = ('id', 'name', 'created_by',)
-    search_fields = ('id', 'name', 'slug', 
-                    'owner__id', 
-                    'owner__name', 
-                    'contributors__name', 
-                    'description',)
+    search_fields = ('id', 'name', 'slug',
+                     'owner__id',
+                     'owner__name',
+                     'contributors__name',
+                     'description',)
     # autocomplete_fields = ('organization', )
+
 
 admin.site.register(Organization, OrganizationAdmin)
