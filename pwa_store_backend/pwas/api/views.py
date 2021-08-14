@@ -73,14 +73,14 @@ class PwaViewSet(viewsets.ModelViewSet):
     #     serializer = PwaSerializer(request.user, context={"request": request})
     #     return Response(status=status.HTTP_200_OK, data=serializer.data)
     
-    @action(methods=['GET'], detail=False, url_path='search', url_name='pwa_search')
-    def search(self, request, *args, **kwargs):
-        key = self.request.GET.get('key', '')
-        qs = self.queryset.filter(
-          Q(name__contains=key) | Q(description__startswith=key)
-        )
-        serializer = self.get_serializer(qs, many=True)
-        return Response(serializer.data)
+    # @action(methods=['GET'], detail=False, url_path='search', url_name='pwa_search')
+    # def search(self, request, *args, **kwargs):
+    #     key = self.request.GET.get('key', '')
+    #     qs = self.queryset.filter(
+    #       Q(name__contains=key) | Q(description__startswith=key)
+    #     )
+    #     serializer = self.get_serializer(qs, many=True)
+    #     return Response(serializer.data)
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (SearchFilter, )
     search_fields = ['name', 'description', 'tags__name']
@@ -94,11 +94,11 @@ class PwaViewSet(viewsets.ModelViewSet):
                 permissions.IsAuthenticated,)
         return super(PwaViewSet, self).get_permissions()
 
-    @action(methods=['get'], detail=False, permission_classes=[AllowAny,])
+    @action(methods=['get'], detail=False, url_path="get-manifest", url_name="get_manifest", permission_classes=[AllowAny,])
     def get_manifest(self, request):
-        url = request.query_params.get('url')
-        r = requests.get(f"{url}/manifest.json")
-
-        # Need to set up error handling
-        
-        return Response(r.json())
+        try:
+            url = request.query_params.get('url')
+            r = requests.get(f"{url}/manifest.json")
+            return Response(r.json(), status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": "Invalid URL"}, status=status.HTTP_406_NOT_ACCEPTABLE)

@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator 
+from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
 
 class Tag(models.Model):
     name = models.CharField(max_length=250)
@@ -18,7 +19,7 @@ class Tag(models.Model):
         ordering = ('-name',)
         unique_together = ['name']
 
-class Pwa(models.Model):
+class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = models.CharField(max_length=50)
     url = models.CharField(max_length=250)
     slug = models.SlugField(null=True)
@@ -29,16 +30,15 @@ class Pwa(models.Model):
 
     tags = models.ManyToManyField(
         Tag,
-        related_name='tags',)
+        related_name='tags',
+    )
 
     icon_url = models.CharField(max_length=250, null=True, blank=True)
     short_description = models.CharField(max_length=80, null=True, blank=True)
     description = models.TextField(max_length=1000, null=True, blank=True)
     views = models.PositiveIntegerField(default=0)
     launches = models.PositiveIntegerField(default=0)
-
-    date_created = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    published = models.BooleanField(default=False) # to filter whether to show pda in the marketplace
 
     def __str__(self):
         return self.name
