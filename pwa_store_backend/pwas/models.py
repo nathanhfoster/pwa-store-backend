@@ -7,8 +7,8 @@ from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchi
 class Tag(models.Model):
     name = models.CharField(max_length=250)
 
-    date_created = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name
@@ -38,7 +38,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     description = models.TextField(max_length=1000, null=True, blank=True)
     views = models.PositiveIntegerField(default=0)
     launches = models.PositiveIntegerField(default=0)
-    published = models.BooleanField(default=False) # to filter whether to show pda in the marketplace
+    published = models.BooleanField(default=False) # to filter whether to show pwa in the marketplace
 
     def __str__(self):
         return self.name
@@ -65,8 +65,8 @@ class Rating(models.Model):
     
     value = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
 
-    date_created = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.owner} | {self.pwa_id} | {self.value}"

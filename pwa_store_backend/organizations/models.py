@@ -13,8 +13,8 @@ class Organization(models.Model):
         settings.AUTH_USER_MODEL,
         related_name='organizationContributors',)
     description = models.TextField(max_length=1000)
-    date_created = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.name

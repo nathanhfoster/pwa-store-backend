@@ -13,7 +13,7 @@ class PwaResource(ModelResource):
         import_id_fields = ('id', 'name',)
         fields = ('id', 'name', 'url', 'slug',
                   'organization', 'tags', 'icon_url', 'short_description', 'description',
-                  'views', 'launches', 'date_created', 'last_modified',)
+                  'views', 'launches', 'created_at', 'updated_at',)
         widgets = { 'organization': { 'field': 'pk' }, 'tags': { 'field': 'name' }, }
 
 class PwaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
@@ -32,13 +32,13 @@ class TagResource(ModelResource):
     class Meta:
         model = Tag
         import_id_fields = ('id', 'name',)
-        fields = ('id', 'name', 'date_created', 'last_modified',)
+        fields = ('id', 'name', 'created_at', 'updated_at',)
         # widgets = {'tags': {'field': 'name'}}
 
 class TagAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = TagResource
 
-    list_display = ('id', 'name', 'date_created', 'last_modified',)
+    list_display = ('id', 'name', 'created_at', 'updated_at',)
     list_display_links = ('id', 'name', )
     search_fields = ('id', 'name',)
 

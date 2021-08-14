@@ -5,19 +5,19 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name')
-        read_only_fields = ('id', 'date_created', 'last_modified')
+        read_only_fields = ('id', 'created_at', 'updated_at')
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ('id', 'pwa_id', 'owner', 'value')
-        read_only_fields = ('id', 'date_created', 'last_modified')
+        read_only_fields = ('id', 'created_at', 'updated_at')
 
 class RatingsField(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ('owner', 'value')
-        read_only_fields = ('id', 'pwa_id','date_created', 'last_modified')
+        read_only_fields = ('id', 'pwa_id','created_at', 'updated_at')
 
 class PwaSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True, required=False)
@@ -27,6 +27,6 @@ class PwaSerializer(serializers.ModelSerializer):
         model = Pwa
         fields = ('id', 'name', 'url', 'short_description', 'description',
                 'views', 'launches', 'ratings', 'organization',
-                'tags', 'icon_url','last_modified')
-        read_only_fields = ('id', 'date_created', 'last_modified')
+                'tags', 'icon_url','updated_at')
+        read_only_fields = ('id', 'created_at', 'updated_at')
         

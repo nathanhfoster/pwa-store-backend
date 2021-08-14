@@ -14,14 +14,14 @@ class OrganizationResource(ModelResource):
         import_id_fields = ('id', 'name',)
         fields = ('id', 'name', 'slug', 'owner',
                   'contributors', 'description',
-                  'date_created', 'last_modified',)
+                  'created_at', 'updated_at',)
 
 class OrganizationAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = OrganizationResource
 
     list_display = ('id', 'name', 'slug', 'owner',
                     'get_contributors', 'description',
-                    'date_created', 'last_modified',)
+                    'created_at', 'updated_at',)
     list_display_links = ('id', 'name', 'owner',)
     search_fields = ('id', 'name', 'slug', 
                     'owner__id', 
