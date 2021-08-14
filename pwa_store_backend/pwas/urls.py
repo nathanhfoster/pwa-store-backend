@@ -1,10 +1,11 @@
 from django.urls import path, include
-from .views import PwaView, TagView
+from .api.views import PwaViewSet, TagViewSet, RatingViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
-router.register('pwas', PwaView)
-router.register('tags', TagView)
+router.register('pwas', PwaViewSet)
+router.register('tags', TagViewSet)
+router.register('ratings', RatingViewSet)
 
 
 app_name = "pwas"
