@@ -62,7 +62,11 @@ class RatingViewSet(viewsets.ModelViewSet):
 class PwaViewSet(viewsets.ModelViewSet):
     serializer_class = PwaSerializer
     pagination_class = StandardResultsSetPagination
-    queryset = Pwa.objects.all()
+    queryset = Pwa.objects.filter(published=True)
+
+    def get_queryset(self):
+        qs = super().get_queryset().select_related('pwa_analytics', 'organization')
+        return qs
     # lookup_field = "name"
 
     # def get_queryset(self, *args, **kwargs):

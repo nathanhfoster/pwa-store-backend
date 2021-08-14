@@ -11,7 +11,8 @@ class Organization(models.Model):
         on_delete=models.CASCADE,)
     contributors = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name='organizationContributors',)
+        related_name='organizationContributors',
+    )
     description = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

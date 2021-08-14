@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pwa, Rating, Tag
+from .models import Pwa, Rating, Tag, PwaAnalytics
 from import_export.fields import Field
 from import_export.resources import ModelResource
 from import_export.admin import ImportExportActionModelAdmin
@@ -21,11 +21,10 @@ class PwaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 
     list_display = ('id', 'name', 'url', 'slug',
                     'organization', 'get_tags', 'short_description', 'description',
-                    'views', 'launches', 'created_at', 'updated_at',)
+                     'created_at', 'updated_at',)
     list_display_links = ('id', 'name', 'organization', )
     search_fields = ('id', 'name', 'url', 'slug',
-                    'organization__name', 'tags__name', 'short_description', 'description',
-                    'views', 'launches')
+                    'organization__name', 'tags__name', 'short_description', 'description',)
     # autocomplete_fields = ('organization', )
 
 class TagResource(ModelResource):
@@ -42,6 +41,21 @@ class TagAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     list_display_links = ('id', 'name', )
     search_fields = ('id', 'name',)
 
+
+class PwaAnalyticsResource(ModelResource):
+    class Meta:
+        model = PwaAnalytics
+        fields = '__all__'
+ 
+
+class PwaAnalyticsAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    model = PwaAnalyticsResource
+    list_display_links = ('pwa', 'id')
+    list_display = ('id', 'pwa', 'view_count', 'launch_count',)
+
+
+
 admin.site.register(Pwa, PwaAdmin)
 admin.site.register(Rating)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(PwaAnalytics, PwaAnalyticsAdmin)
