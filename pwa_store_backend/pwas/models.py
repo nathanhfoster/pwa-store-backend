@@ -50,7 +50,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
 
 
 class PwaAnalytics(TimeStampAbstractModel, AbstractArchivedModel):
-    pwa = models.OneToOneField(Pwa, related_name='pwa_analytics', on_delete=models.CASCADE, null=True)
+    pwa = models.OneToOneField(Pwa, related_name='pwa_analytics', on_delete=models.CASCADE, null=False)
     view_count = models.PositiveIntegerField(default=0)
     launch_count = models.PositiveIntegerField(default=0)
 
@@ -72,7 +72,7 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
     comment = models.TextField(null=True)
 
     def __str__(self):
-        return f"{self.owner} | {self.pwa_id} | {self.value}"
+        return f"{self.created_by} | {self.pwa_id} | {self.value}"
 
     class Meta:
         verbose_name = 'Rating'

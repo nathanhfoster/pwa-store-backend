@@ -4,19 +4,19 @@ from ..models import Pwa, Rating, Tag, PwaAnalytics
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ('name')
+        fields = ('name',)
         read_only_fields = ('created_at', 'updated_at')
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ('id', 'pwa', 'owner', 'value')
+        fields = ('id', 'pwa', 'created_by', 'value')
         read_only_fields = ('id', 'created_at', 'updated_at')
 
 class RatingsField(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ('owner', 'value')
+        fields = ('created_by', 'value')
         read_only_fields = ('id', 'pwa','created_at', 'updated_at')
 
 class PwaAnalytics(serializers.ModelSerializer):

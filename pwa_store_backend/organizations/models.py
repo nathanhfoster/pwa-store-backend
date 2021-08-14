@@ -1,14 +1,11 @@
 from django.db import models
 from django.conf import settings
+from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
 
-
-class Organization(models.Model):
+class Organization(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = models.CharField(max_length=250)
     slug = models.SlugField(null=True)
-    owner = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='organizationOwner',
-        on_delete=models.CASCADE,)
+
     contributors = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='organizationContributors',
