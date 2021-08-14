@@ -73,6 +73,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "rest_framework",
     "rest_framework.authtoken",
+    "import_export",
     "corsheaders",
 ]
 

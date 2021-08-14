@@ -18,6 +18,11 @@ class Organization(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def get_contributors(self):
+        contributors = self.contributors.all()
+        return ",\n".join([c.name for c in contributors])
+
 
     class Meta:
         # app_label = 'organizations'
