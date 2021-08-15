@@ -1,7 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from ..models import Pwa, Rating, Tag
+from ..models import Pwa, Rating, Tag, PwaAnalytics
 from rest_framework import viewsets, status, permissions, pagination
 from .serializers import PwaSerializer, RatingSerializer, TagSerializer
 from rest_framework.permissions import AllowAny
@@ -63,30 +63,13 @@ class PwaViewSet(viewsets.ModelViewSet):
     pagination_class = StandardResultsSetPagination
     queryset = Pwa.objects.filter(published=True)
 
-    def get_queryset(self):
-        qs = super().get_queryset().select_related('pwa_analytics', 'organization')
-        return qs
-    # lookup_field = "name"
-
-    # def get_queryset(self, *args, **kwargs):
-    #     return self.queryset.filter(id=self.request.user.id)
-
-    # @action(detail=False, methods=["GET"])
-    # def me(self, request):
-    #     serializer = PwaSerializer(request.user, context={"request": request})
-    #     return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-    # @action(methods=['GET'], detail=False, url_path='search', url_name='pwa_search')
-    # def search(self, request, *args, **kwargs):
-    #     key = self.request.GET.get('key', '')
-    #     qs = self.queryset.filter(
-    #       Q(name__contains=key) | Q(description__startswith=key)
-    #     )
-    #     serializer = self.get_serializer(qs, many=True)
-    #     return Response(serializer.data)
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (SearchFilter, )
     search_fields = ['name', 'description', 'tags__name']
+
+    def get_queryset(self):
+        qs = super().get_queryset().select_related('pwa_analytics', 'organization')
+        return qs
 
     def get_permissions(self):
         # allow an authenticated user to create via POST
@@ -105,3 +88,19 @@ class PwaViewSet(viewsets.ModelViewSet):
             return Response(r.json(), status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": "Invalid URL"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+    @action(methods=['patch'], detail=False, url_path="analytics-counter")
+    def increase_counts(self, request):
+        data = request.data
+        try:
+            analytics_obj = PwaAnalytics.objects.get(pwa_id=data.get('pwa_id'))
+            if data.get('incr_view'):
+                analytics_obj.view_count += 1
+            elif data.get('incr_launch'):
+                analytics_obj.launch_count += 1
+            else:
+                return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+            analytics_obj.save()
+        except Exception as e:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_200_OK)
