@@ -26,4 +26,4 @@ class Organization(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractM
         # app_label = 'organizations'
         verbose_name = 'Organization'
         verbose_name_plural = 'Organizations'
-        ordering = ('-name',)
+        ordering = ('name',)

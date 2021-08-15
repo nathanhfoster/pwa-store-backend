@@ -14,7 +14,7 @@ class Tag(TimeStampAbstractModel):
     class Meta:
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
-        ordering = ('-name',)
+        ordering = ('name',)
         unique_together = ['name']
 
 
@@ -47,7 +47,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     class Meta:
         verbose_name = 'Pwa'
         verbose_name_plural = 'Pwas'
-        ordering = ('-name',)
+        ordering = ('name',)
 
 
 class PwaAnalytics(TimeStampAbstractModel, AbstractArchivedModel):
@@ -78,5 +78,5 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
     class Meta:
         verbose_name = 'Rating'
         verbose_name_plural = 'Ratings'
-        ordering = ('-value',)
+        ordering = ('value',)
         unique_together = ['pwa', 'created_by']
