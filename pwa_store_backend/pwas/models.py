@@ -51,7 +51,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
         ordering = ('name',)
 
 
-class PwaScreenShots(TimeStampAbstractModel):
+class PwaScreenshot(TimeStampAbstractModel):
     pwa = ForeignKey(
         Pwa,
         related_name='pwa_screenshots',

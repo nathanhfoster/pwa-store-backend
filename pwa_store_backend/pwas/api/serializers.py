@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from ..models import Pwa, Rating, Tag, PwaScreenShots, PwaAnalytics
+from ..models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -23,9 +23,9 @@ class RatingsField(serializers.ModelSerializer):
         read_only_fields = ('id', 'pwa', 'created_at', 'updated_at')
 
 
-class PwaScreenShots(serializers.ModelSerializer):
+class PwaScreenshot(serializers.ModelSerializer):
     class Meta:
-        model = PwaScreenShots
+        model = PwaScreenshot
         fields = ('image_url', 'caption', )
 
 
@@ -39,7 +39,7 @@ class PwaSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True, required=False)
     ratings = RatingsField(many=True, read_only=True, required=False)
     pwa_analytics = PwaAnalytics(read_only=True)
-    pwa_screenshots = PwaScreenShots(many=True, read_only=True)
+    pwa_screenshots = PwaScreenshot(many=True, read_only=True)
 
     class Meta:
         model = Pwa

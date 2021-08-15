@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pwa, Rating, Tag, PwaScreenShots, PwaAnalytics
+from .models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
 from import_export.fields import Field
 from import_export.resources import ModelResource
 from import_export.admin import ImportExportActionModelAdmin
@@ -48,7 +48,7 @@ class TagAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 
 class PwaScreenShotsResource(ModelResource):
     class Meta:
-        model = PwaScreenShots
+        model = PwaScreenshot
         fields = '__all__'
 
 
@@ -73,5 +73,5 @@ class PwaAnalyticsAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 admin.site.register(Pwa, PwaAdmin)
 admin.site.register(Rating)
 admin.site.register(Tag, TagAdmin)
-admin.site.register(PwaScreenShots, PwaScreenShotsAdmin)
+admin.site.register(PwaScreenshot, PwaScreenShotsAdmin)
 admin.site.register(PwaAnalytics, PwaAnalyticsAdmin)
