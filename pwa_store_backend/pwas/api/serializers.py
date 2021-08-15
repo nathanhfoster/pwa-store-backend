@@ -44,6 +44,6 @@ class PwaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pwa
         fields = ('id', 'name', 'url', 'short_description', 'description',
-                  'ratings', 'organization', 'pwa_analytics',
+                  'ratings', 'organization', 'pwa_analytics', 'pwa_screenshots',
                   'tags', 'image_url', 'updated_at')
         read_only_fields = ('id', 'created_at', 'updated_at')

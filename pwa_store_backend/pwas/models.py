@@ -52,7 +52,11 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
 
 
 class PwaScreenShots(TimeStampAbstractModel):
-    pwa = OneToOneField(Pwa, related_name='pwa_screenshots', on_delete=CASCADE, null=False)
+    pwa = ForeignKey(
+        Pwa,
+        related_name='pwa_screenshots',
+        on_delete=CASCADE,
+    )
     image_url = CharField(max_length=250, null=False)
     caption = CharField(max_length=80, null=False)
 
