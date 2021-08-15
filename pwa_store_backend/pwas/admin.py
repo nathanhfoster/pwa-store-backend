@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Pwa, Rating, Tag, PwaAnalytics
+from .models import Pwa, Rating, Tag, PwaScreenShots, PwaAnalytics
 from import_export.fields import Field
 from import_export.resources import ModelResource
 from import_export.admin import ImportExportActionModelAdmin
@@ -13,7 +13,7 @@ class PwaResource(ModelResource):
         model = Pwa
         import_id_fields = ('id', 'name',)
         fields = ('id', 'name', 'url', 'slug',
-                  'organization', 'tags', 'icon_url', 'short_description', 'description',
+                  'organization', 'tags', 'image_url', 'short_description', 'description',
                   'views', 'launches', 'created_at', 'updated_at',)
         widgets = {'organization': {'field': 'pk'}, 'tags': {'field': 'name'}, }
 
@@ -46,6 +46,18 @@ class TagAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     search_fields = ('id', 'name',)
 
 
+class PwaScreenShotsResource(ModelResource):
+    class Meta:
+        model = PwaScreenShots
+        fields = '__all__'
+
+
+class PwaScreenShotsAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    model = PwaScreenShotsResource
+    list_display_links = ('pwa', 'id')
+    list_display = ('id', 'pwa', 'image_url',  'caption', )
+
+
 class PwaAnalyticsResource(ModelResource):
     class Meta:
         model = PwaAnalytics
@@ -61,4 +73,5 @@ class PwaAnalyticsAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
 admin.site.register(Pwa, PwaAdmin)
 admin.site.register(Rating)
 admin.site.register(Tag, TagAdmin)
+admin.site.register(PwaScreenShots, PwaScreenShotsAdmin)
 admin.site.register(PwaAnalytics, PwaAnalyticsAdmin)

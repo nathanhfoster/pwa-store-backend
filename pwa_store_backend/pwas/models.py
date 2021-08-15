@@ -1,5 +1,5 @@
-from django.db import models
 from django.conf import settings
+from django.db.models import CharField, SlugField, ForeignKey, CASCADE, ManyToManyField, OneToOneField, PositiveIntegerField, TextField, BooleanField
 from django.db.models.signals import post_save
 from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -7,7 +7,7 @@ from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchi
 
 
 class Tag(TimeStampAbstractModel):
-    name = models.CharField(max_length=250)
+    name = CharField(max_length=250)
 
     def __str__(self):
         return self.name
@@ -20,23 +20,23 @@ class Tag(TimeStampAbstractModel):
 
 
 class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
-    name = models.CharField(max_length=50)
-    url = models.CharField(max_length=250)
-    slug = models.SlugField(null=True)
-    organization = models.ForeignKey(
+    name = CharField(max_length=50)
+    url = CharField(max_length=250)
+    slug = SlugField(null=True)
+    organization = ForeignKey(
         Organization,
         related_name='organization',
-        on_delete=models.CASCADE,
+        on_delete=CASCADE,
     )
-    tags = models.ManyToManyField(
+    tags = ManyToManyField(
         Tag,
         related_name='tags',
     )
 
-    icon_url = models.CharField(max_length=250, null=True, blank=True)
-    short_description = models.CharField(max_length=80, null=True, blank=True)
-    description = models.TextField(max_length=1000, null=True, blank=True)
-    published = models.BooleanField(default=False)  # to filter whether to show pwa in the marketplace
+    image_url = CharField(max_length=250, null=True, blank=True)
+    short_description = CharField(max_length=80, null=True, blank=True)
+    description = TextField(max_length=1000, null=True, blank=True)
+    published = BooleanField(default=False)  # to filter whether to show pwa in the marketplace
 
     def __str__(self):
         return self.name
@@ -50,10 +50,24 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
         verbose_name_plural = 'Pwas'
         ordering = ('name',)
 
+
+class PwaScreenShots(TimeStampAbstractModel):
+    pwa = OneToOneField(Pwa, related_name='pwa_screenshots', on_delete=CASCADE, null=False)
+    image_url = CharField(max_length=250, null=False)
+    caption = CharField(max_length=80, null=False)
+
+    class Meta:
+        verbose_name = 'Pwa Screenshots'
+        verbose_name_plural = 'Pwa Screenshots'
+
+    def __str__(self):
+        return self.pwa.name
+
+
 class PwaAnalytics(TimeStampAbstractModel, AbstractArchivedModel):
-    pwa = models.OneToOneField(Pwa, related_name='pwa_analytics', on_delete=models.CASCADE, null=False)
-    view_count = models.PositiveIntegerField(default=0)
-    launch_count = models.PositiveIntegerField(default=0)
+    pwa = OneToOneField(Pwa, related_name='pwa_analytics', on_delete=CASCADE, null=False)
+    view_count = PositiveIntegerField(default=0)
+    launch_count = PositiveIntegerField(default=0)
 
     class Meta:
         verbose_name = 'Pwa Analytics'
@@ -64,13 +78,13 @@ class PwaAnalytics(TimeStampAbstractModel, AbstractArchivedModel):
 
 
 class Rating(TimeStampAbstractModel, OwnerAbstractModel):
-    pwa = models.ForeignKey(
+    pwa = ForeignKey(
         Pwa,
         related_name='ratings',
-        on_delete=models.CASCADE,
+        on_delete=CASCADE,
     )
-    value = models.PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
-    comment = models.TextField(null=True)
+    value = PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    comment = TextField(null=True)
 
     def __str__(self):
         return f"{self.created_by} | {self.pwa_id} | {self.value}"
@@ -81,20 +95,22 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
         ordering = ('value',)
         unique_together = ['pwa', 'created_by']
 
+
 class FavoritePwa(TimeStampAbstractModel, AbstractArchivedModel):
-    user = models.ForeignKey(
+    user = ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='user_favorites',
-        on_delete=models.CASCADE,
+        on_delete=CASCADE,
     )
-    pwa = models.ForeignKey(
+    pwa = ForeignKey(
         Pwa,
         related_name='pwa_favorites',
-        on_delete=models.CASCADE,
+        on_delete=CASCADE,
     )
 
     def __str__(self):
         return self.pwa.name
+
 
 # while working with signals imports should be at bottom to avoid circular signals
 from pwa_store_backend.pwas.signals import pwa_post_save_handler
