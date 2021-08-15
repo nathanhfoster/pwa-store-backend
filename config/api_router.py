@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.urls import include, path
 from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from pwa_store_backend.users.api.views import UserViewSet
@@ -16,4 +17,7 @@ router.register("pwas", PwaViewSet)
 router.register("tags", TagViewSet)
 
 app_name = "api"
-urlpatterns = router.urls
+urlpatterns = router.urls + [
+  # DRF auth token
+  path('auth/', include("pwa_store_backend.users.api.urls")),
+]

@@ -23,8 +23,6 @@ urlpatterns = [
 urlpatterns += [
     # API base url
     path("api/", include("config.api_router")),
-    # DRF auth token
-    path('auth/', include("pwa_store_backend.users.api.urls")),
 ]
 
 if settings.DEBUG:
