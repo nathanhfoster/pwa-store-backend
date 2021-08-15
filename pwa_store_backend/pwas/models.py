@@ -81,6 +81,21 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
         ordering = ('value',)
         unique_together = ['pwa', 'created_by']
 
+class FavoritePwa(TimeStampAbstractModel, AbstractArchivedModel):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='user_favorites',
+        on_delete=models.CASCADE,
+    )
+    pwa = models.ForeignKey(
+        Pwa,
+        related_name='pwa_favorites',
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.pwa.name
+
 # while working with signals imports should be at bottom to avoid circular signals
 from pwa_store_backend.pwas.signals import pwa_post_save_handler
 post_save.connect(pwa_post_save_handler, sender=Pwa)
