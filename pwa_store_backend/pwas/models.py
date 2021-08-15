@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.db.models.signals import post_save
 from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator
 from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
@@ -49,7 +50,6 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
         verbose_name_plural = 'Pwas'
         ordering = ('name',)
 
-
 class PwaAnalytics(TimeStampAbstractModel, AbstractArchivedModel):
     pwa = models.OneToOneField(Pwa, related_name='pwa_analytics', on_delete=models.CASCADE, null=False)
     view_count = models.PositiveIntegerField(default=0)
@@ -80,3 +80,7 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
         verbose_name_plural = 'Ratings'
         ordering = ('value',)
         unique_together = ['pwa', 'created_by']
+
+# while working with signals imports should be at bottom to avoid circular signals
+from pwa_store_backend.pwas.signals import pwa_post_save_handler
+post_save.connect(pwa_post_save_handler, sender=Pwa)
