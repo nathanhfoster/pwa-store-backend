@@ -3,9 +3,12 @@ from django.db import models
 from django.db.models import CharField, OneToOneField
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+
+from pwa_store_backend.utils.models import TimeStampAbstractModel
 
 
-class UserSetting(models.Model):
+class UserSetting(TimeStampAbstractModel):
     LIGHT = 'light'
     DARK = 'dark'
     MODES = [
@@ -18,6 +21,9 @@ class UserSetting(models.Model):
         default=LIGHT,
     )
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return self.mode
 
@@ -29,7 +35,7 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
-    modes = OneToOneField(UserSetting, on_delete=models.SET_NULL, null=True)
+    setting = OneToOneField(UserSetting, on_delete=models.SET_NULL, null=True)
 
     def get_absolute_url(self):
         """Get url for user's detail view.
@@ -39,3 +45,7 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
+
+
+from pwa_store_backend.users.signals import user_post_save_handler
+post_save.connect(user_post_save_handler, sender=User)
