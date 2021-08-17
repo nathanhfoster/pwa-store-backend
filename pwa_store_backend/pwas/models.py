@@ -1,5 +1,15 @@
 from django.conf import settings
-from django.db.models import CharField, SlugField, ForeignKey, CASCADE, ManyToManyField, OneToOneField, PositiveIntegerField, TextField, BooleanField
+from django.db.models import (
+  CharField,
+  SlugField,
+  ForeignKey,
+  CASCADE,
+  ManyToManyField,
+  OneToOneField,
+  PositiveIntegerField,
+  TextField,
+  BooleanField
+)
 from django.db.models.signals import post_save
 from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator

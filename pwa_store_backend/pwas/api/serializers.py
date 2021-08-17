@@ -29,7 +29,7 @@ class PwaScreenshot(serializers.ModelSerializer):
         fields = ('image_url', 'caption', )
 
 
-class PwaAnalytics(serializers.ModelSerializer):
+class PwaAnalyticsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PwaAnalytics
         fields = ('view_count', 'launch_count')
@@ -38,7 +38,7 @@ class PwaAnalytics(serializers.ModelSerializer):
 class PwaSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True, required=False)
     ratings = RatingsField(many=True, read_only=True, required=False)
-    pwa_analytics = PwaAnalytics(read_only=True)
+    pwa_analytics = PwaAnalyticsSerializer(read_only=True)
     pwa_screenshots = PwaScreenshot(many=True, read_only=True)
 
     class Meta:

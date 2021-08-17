@@ -3,13 +3,13 @@ from rest_framework.response import Response
 
 from ..models import Pwa, Rating, Tag, PwaAnalytics
 from rest_framework import viewsets, status, permissions, pagination
-from .serializers import PwaSerializer, RatingSerializer, TagSerializer
+from .serializers import PwaSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 import requests
-
+import json
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
@@ -76,11 +76,12 @@ class PwaViewSet(viewsets.ModelViewSet):
         if self.request.method == 'GET':
             self.permission_classes = (AllowAny,)
         if self.request.method == 'PATCH':
-            self.permission_classes = (
-                permissions.IsAuthenticated,)
+            self.permission_classes = (AllowAny,)
+            # self.permission_classes = (
+            #     permissions.IsAuthenticated,)
         return super(PwaViewSet, self).get_permissions()
 
-    @action(methods=['get'], detail=False, url_path="get-manifest", url_name="get_manifest", permission_classes=[AllowAny, ])
+    @action(methods=['get'], detail=False, url_path="get-manifest", url_name="get_manifest")
     def get_manifest(self, request):
         try:
             url = request.query_params.get('url')
@@ -91,16 +92,17 @@ class PwaViewSet(viewsets.ModelViewSet):
 
     @action(methods=['patch'], detail=False, url_path="analytics-counter")
     def increase_counts(self, request):
-        data = request.data
+        data = json.loads(request.body)
         try:
-            analytics_obj = PwaAnalytics.objects.get(pwa_id=data.get('pwa_id'))
-            if data.get('incr_view'):
+            analytics_obj = PwaAnalytics.objects.get(pwa__id=data.get('pwa_id'))
+            if data.get('incr_view', False):
                 analytics_obj.view_count += 1
-            elif data.get('incr_launch'):
+            elif data.get('incr_launch', False):
                 analytics_obj.launch_count += 1
             else:
                 return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
             analytics_obj.save()
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(status=status.HTTP_200_OK)
+        serializer = PwaAnalyticsSerializer(analytics_obj)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
