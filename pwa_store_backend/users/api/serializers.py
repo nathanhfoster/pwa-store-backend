@@ -1,8 +1,6 @@
-from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from pwa_store_backend.users.models import User, UserSetting
 
-# User = get_user_model()
 
 class UserSettingSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,11 +9,11 @@ class UserSettingSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    settings = UserSettingSerializer()
+    setting = UserSettingSerializer()
     class Meta:
         model = User
-        fields = ("username", "name", "url", "settings")
+        fields = ("username", "name", "url", "setting")
 
         extra_kwargs = {
-            "url": {"view_name": "api:user-detail", "lookup_field": ("id", "username")}
+            "url": {"view_name": "api:user-detail", "lookup_field": "username" }
         }
