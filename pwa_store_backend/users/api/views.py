@@ -60,6 +60,7 @@ class LoginView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         update_last_login(None, user)
+        
         token = get_object_or_404(Token, user=user)
 
         return Response({
