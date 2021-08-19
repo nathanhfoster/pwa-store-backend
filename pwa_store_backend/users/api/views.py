@@ -9,7 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import update_last_login
 from rest_framework.permissions import AllowAny
-from .serializers import UserSerializer
+from .serializers import UserSerializer, UserSettingSerializer
 
 User = get_user_model()
 
@@ -62,13 +62,14 @@ class LoginView(ObtainAuthToken):
         update_last_login(None, user)
         
         token = get_object_or_404(Token, user=user)
-
+        setting_serializer = UserSettingSerializer(user.setting)
         return Response({
             'token': token.key,
             'id': user.pk,
             'username': user.username,
             'name': user.name,
             'email': user.email,
+            "setting": setting_serializer.data,
             'is_active': user.is_active,
             'is_superuser': user.is_superuser,
             'is_staff': user.is_staff,
