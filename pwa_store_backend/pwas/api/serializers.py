@@ -13,14 +13,14 @@ class TagSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ('id', 'pwa', 'created_by', 'value')
+        fields = ('id', 'pwa','value', 'created_by', 'updated_at', )
         read_only_fields = ('id', 'created_at', 'updated_at')
 
 
 class RatingsField(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ('created_by', 'value')
+        fields = ('created_by', 'value', 'comment', 'updated_at',)
         read_only_fields = ('id', 'pwa', 'created_at', 'updated_at')
 
 
