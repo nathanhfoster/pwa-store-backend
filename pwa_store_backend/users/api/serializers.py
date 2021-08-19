@@ -15,5 +15,5 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ("username", "name", "url", "setting")
 
         extra_kwargs = {
-            "url": {"view_name": "api:user-detail", "lookup_field": "username" }
+            "url": { "view_name": "api:user-detail" }
         }
