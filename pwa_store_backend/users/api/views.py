@@ -37,13 +37,14 @@ class RegisterView(ObtainAuthToken):
         user = serializer.validated_data['user']
         update_last_login(None, user)
         token, created = Token.objects.get_or_create(user=user)
-
+        setting_serializer = UserSettingSerializer(user.setting)
         return Response({
             'token': token.key,
             'id': user.pk,
             'username': user.username,
             'name': user.name,
             'email': user.email,
+            'setting': setting_serializer.data,
             'is_active': user.is_active,
             'is_superuser': user.is_superuser,
             'is_staff': user.is_staff,
@@ -69,7 +70,7 @@ class LoginView(ObtainAuthToken):
             'username': user.username,
             'name': user.name,
             'email': user.email,
-            "setting": setting_serializer.data,
+            'setting': setting_serializer.data,
             'is_active': user.is_active,
             'is_superuser': user.is_superuser,
             'is_staff': user.is_staff,
