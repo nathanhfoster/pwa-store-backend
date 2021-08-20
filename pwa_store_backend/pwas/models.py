@@ -98,7 +98,7 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
         on_delete=CASCADE,
     )
     value = PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
-    comment = TextField(null=True)
+    comment = TextField(null=True, max_length=350)
 
     def __str__(self):
         return f"{self.created_by} | {self.pwa_id} | {self.value}"
