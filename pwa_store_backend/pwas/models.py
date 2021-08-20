@@ -14,6 +14,7 @@ from django.db.models.signals import post_save
 from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator
 from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
+from django.core.validators import MinLengthValidator
 
 
 class Tag(TimeStampAbstractModel):
@@ -30,13 +31,15 @@ class Tag(TimeStampAbstractModel):
 
 
 class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
-    name = CharField(max_length=50)
-    url = CharField(max_length=250)
-    slug = SlugField(null=True)
+    name = CharField(validators=[MinLengthValidator(3)], max_length=50)
+    url = CharField(validators=[MinLengthValidator(15)], max_length=250)
+    slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, blank=True)
     organization = ForeignKey(
         Organization,
         related_name='organization',
         on_delete=CASCADE,
+        null=True,
+        blank=True
     )
     tags = ManyToManyField(
         Tag,

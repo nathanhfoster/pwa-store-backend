@@ -7,11 +7,12 @@ from rest_framework.viewsets import  ModelViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import update_last_login
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import UserSerializer, UserSettingSerializer
+from pwa_store_backend.pwas.models import Pwa
+from pwa_store_backend.pwas.api.serializers import PwaSerializer
 
 User = get_user_model()
-
 
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
@@ -24,6 +25,13 @@ class UserViewSet(ModelViewSet):
     def me(self, request):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
+    def pwas(self, request, pk):
+        queryset = Pwa.objects.all().filter(created_by=pk)
+        serializer = PwaSerializer(queryset, many=True)
+
+        return Response(serializer.data)
 
 
 class RegisterView(ObtainAuthToken):
