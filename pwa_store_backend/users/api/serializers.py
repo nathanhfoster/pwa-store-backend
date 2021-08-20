@@ -5,7 +5,7 @@ from pwa_store_backend.users.models import User, UserSetting
 class UserSettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserSetting
-        fields = ["mode"]
+        fields = ["id", "mode"]
 
 
 class UserSerializer(serializers.ModelSerializer):

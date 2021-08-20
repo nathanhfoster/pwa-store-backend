@@ -8,7 +8,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import update_last_login
 from rest_framework.permissions import AllowAny
+from rest_framework import generics
 from .serializers import UserSerializer, UserSettingSerializer
+from pwa_store_backend.users.models import UserSetting
 
 User = get_user_model()
 
@@ -75,3 +77,8 @@ class LoginView(ObtainAuthToken):
             'last_login': user.last_login,
             'date_joined': user.date_joined,
         })
+
+
+class UpdateSettingsView(generics.UpdateAPIView):
+    queryset = UserSetting.objects.all()
+    serializer_class = UserSettingSerializer
