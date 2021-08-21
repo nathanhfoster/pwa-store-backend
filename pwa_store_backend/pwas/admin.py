@@ -67,7 +67,7 @@ class PwaAnalyticsResource(ModelResource):
 class PwaAnalyticsAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     model = PwaAnalyticsResource
     list_display_links = ('pwa', 'id')
-    list_display = ('id', 'pwa', 'view_count', 'launch_count',)
+    list_display = ('id', 'pwa', 'view_count', 'launch_count', 'rating_avg', 'rating_count')
 
 
 admin.site.register(Pwa, PwaAdmin)

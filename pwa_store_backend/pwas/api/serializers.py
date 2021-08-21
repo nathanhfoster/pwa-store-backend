@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from pwa_store_backend.users.api.serializers import UserSerializer
 from ..models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
 from ...organizations.models import Organization
 
@@ -17,7 +18,8 @@ class RatingSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_at', 'updated_at')
 
 
-class RatingsField(serializers.ModelSerializer):
+class RatingsSerializer(serializers.ModelSerializer):
+    created_by = UserSerializer()
     class Meta:
         model = Rating
         fields = ('created_by', 'value', 'comment', 'updated_at',)
@@ -44,7 +46,7 @@ class PwaOrganizationSerializer(serializers.ModelSerializer):
 
 class PwaSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True, required=False)
-    ratings = RatingsField(many=True, read_only=True, required=False)
+    ratings = RatingsSerializer(many=True, read_only=True, required=False)
     pwa_analytics = PwaAnalyticsSerializer(read_only=True)
     pwa_screenshots = PwaScreenshot(many=True, read_only=True)
     organization = PwaOrganizationSerializer(many=False, read_only=True, required=False)
