@@ -90,6 +90,8 @@ class PwaViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": "Invalid URL"}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
+
+
     @action(methods=['patch'], detail=False, url_path="analytics-counter")
     def increase_counts(self, request):
         data = json.loads(request.body)
