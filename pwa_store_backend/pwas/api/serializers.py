@@ -10,19 +10,11 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('name',)
         read_only_fields = ('created_at', 'updated_at')
 
-
 class RatingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rating
-        fields = ('id', 'pwa','value', 'created_by', 'updated_at', )
-        read_only_fields = ('id', 'created_at', 'updated_at')
-
-
-class RatingsSerializer(serializers.ModelSerializer):
     created_by = UserSerializer()
     class Meta:
         model = Rating
-        fields = ('created_by', 'value', 'comment', 'updated_at',)
+        fields = ('created_by', 'rating', 'comment', 'updated_at',)
         read_only_fields = ('id', 'pwa', 'created_at', 'updated_at')
 
 
@@ -46,7 +38,7 @@ class PwaOrganizationSerializer(serializers.ModelSerializer):
 
 class PwaSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True, required=False)
-    ratings = RatingsSerializer(many=True, read_only=True, required=False)
+    ratings = RatingSerializer(many=True, read_only=True, required=False)
     pwa_analytics = PwaAnalyticsSerializer(read_only=True)
     pwa_screenshots = PwaScreenshot(many=True, read_only=True)
     organization = PwaOrganizationSerializer(many=False, read_only=True, required=False)

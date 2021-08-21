@@ -107,3 +107,19 @@ class PwaViewSet(viewsets.ModelViewSet):
         qs = self.get_queryset()
         serializer = PwaSerializer(qs.get(id=data.get('pwa_id')), context={ 'request': request })
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    @action(methods=['post'], detail=False, url_path="post-rating")
+    def post_rating(self, request):
+        try: 
+            data = request.data
+            obj = Rating(
+              pwa_id=data.get('pwa_id'),
+              rating=data.get('rating'),
+              comment=data.get('comment'),
+              created_by=request.user,
+            )
+            obj.save()
+            serializer = RatingSerializer(obj, context={'context': request})
+            return Response(status=status.HTTP_200_OK, data=serializer.data)
+        except Exception as e:
+            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)

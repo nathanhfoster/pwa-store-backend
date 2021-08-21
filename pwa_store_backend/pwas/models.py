@@ -103,16 +103,16 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
         related_name='ratings',
         on_delete=CASCADE,
     )
-    value = PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
+    rating = PositiveIntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(5)])
     comment = TextField(null=True, max_length=350)
 
     def __str__(self):
-        return f"{self.created_by} | {self.pwa_id} | {self.value}"
+        return f"{self.created_by} | {self.pwa.name} | {self.rating}"
 
     class Meta:
         verbose_name = 'Rating'
         verbose_name_plural = 'Ratings'
-        ordering = ('value',)
+        ordering = ('rating',)
         unique_together = ['pwa', 'created_by']
 
 
