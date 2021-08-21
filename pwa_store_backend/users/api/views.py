@@ -25,7 +25,7 @@ class UserViewSet(ModelViewSet):
 
     @action(detail=False, methods=["GET"])
     def me(self, request):
-        serializer = UserSerializer(request.user, context={"request": request})
+        serializer = UserSerializer(request.user, context={ "request": request })
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
@@ -69,7 +69,6 @@ class LoginView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         update_last_login(None, user)
-        
         token = get_object_or_404(Token, user=user)
         setting_serializer = UserSettingSerializer(user.setting)
         return Response({

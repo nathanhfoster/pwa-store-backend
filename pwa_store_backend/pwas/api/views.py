@@ -107,5 +107,5 @@ class PwaViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         qs = self.get_queryset()
-        serializer = PwaSerializer(qs.get(id=data.get('pwa_id')))
+        serializer = PwaSerializer(qs.get(id=data.get('pwa_id')), context={ 'request': request })
         return Response(status=status.HTTP_200_OK, data=serializer.data)

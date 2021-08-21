@@ -12,8 +12,8 @@ class UserSerializer(serializers.ModelSerializer):
     setting = UserSettingSerializer()
     class Meta:
         model = User
-        fields = ("username", "name", "url", "setting")
+        fields = ("id", "name", "setting")
 
-        extra_kwargs = {
-            "url": { "view_name": "api:user-detail" }
-        }
+        # extra_kwargs = {
+        #     "url": { "view_name": "api:user-detail" }
+        # }
