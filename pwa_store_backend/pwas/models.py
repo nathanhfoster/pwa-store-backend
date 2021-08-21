@@ -18,7 +18,7 @@ from django.core.validators import MinLengthValidator
 
 
 class Tag(TimeStampAbstractModel):
-    name = CharField(max_length=250)
+    name = CharField(validators=[MinLengthValidator(3)], max_length=250)
 
     def __str__(self):
         return self.name

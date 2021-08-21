@@ -55,3 +55,4 @@ class PwaSerializer(serializers.ModelSerializer):
                   'ratings', 'organization', 'pwa_analytics', 'pwa_screenshots',
                   'tags', 'image_url', 'updated_at')
         read_only_fields = ('id', 'created_at', 'updated_at')
+        
