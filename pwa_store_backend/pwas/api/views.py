@@ -1,15 +1,16 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from ..models import Pwa, Rating, Tag, PwaAnalytics
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status, permissions, pagination
-from .serializers import PwaSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
+from ..models import Pwa, Rating, Tag, PwaAnalytics
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 import requests
 import json
+
+from .serializers import PwaSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
@@ -120,6 +121,12 @@ class PwaViewSet(viewsets.ModelViewSet):
               created_by=request.user,
             )
             obj.save()
+            # update analytics
+            analytic = get_object_or_404(PwaAnalytics, pwa_id=data.get('pwa_id'))
+            analytic.rating_count += 1
+            analytic.rating_avg = (analytic.rating_avg + obj.rating) / analytic.rating_count
+            analytic.save()
+
             serializer = RatingSerializer(obj, context={'context': request})
             return Response(status=status.HTTP_200_OK, data=serializer.data)
         except Exception as e:
