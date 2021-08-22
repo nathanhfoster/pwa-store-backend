@@ -33,7 +33,7 @@ class Tag(TimeStampAbstractModel):
 class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = CharField(validators=[MinLengthValidator(3)], max_length=50)
     url = CharField(validators=[MinLengthValidator(13)], max_length=250)
-    manifest_url = CharField(validators=[MinLengthValidator(5)], max_length=50, null=True)
+    manifest_url = CharField(validators=[MinLengthValidator(5)], max_length=100, null=True)
     manifest_json = TextField(validators=[MinLengthValidator(15)], null=True)
     slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, blank=True)
     organization = ForeignKey(
