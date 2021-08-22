@@ -30,11 +30,11 @@ class Tag(TimeStampAbstractModel):
         ordering = ('name',)
         unique_together = ['name']
 
-
 class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = CharField(validators=[MinLengthValidator(3)], max_length=50)
-    url = CharField(validators=[MinLengthValidator(15)], max_length=250)
-    # manifest_json = TextField(validators=[MinLengthValidator(15)])
+    url = CharField(validators=[MinLengthValidator(13)], max_length=250)
+    manifest_url = CharField(validators=[MinLengthValidator(5)], max_length=50, null=True)
+    manifest_json = TextField(validators=[MinLengthValidator(15)], null=True)
     slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, blank=True)
     organization = ForeignKey(
         Organization,
@@ -89,6 +89,7 @@ class PwaAnalytics(TimeStampAbstractModel, AbstractArchivedModel):
     launch_count = PositiveIntegerField(default=0)
     rating_avg = FloatField(null=True) #holds average rating of the pwa
     rating_count = PositiveIntegerField(default=0) #holds count of the total ratings for a pwa
+
 
     class Meta:
         verbose_name = 'Pwa Analytics'
