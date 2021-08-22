@@ -49,4 +49,20 @@ class PwaSerializer(serializers.ModelSerializer):
                   'ratings', 'organization', 'pwa_analytics', 'pwa_screenshots',
                   'tags', 'image_url', 'updated_at')
         read_only_fields = ('id', 'created_at', 'updated_at')
+
+    def update(self, instance, validated_data):
+        obj = super().update(instance, validated_data)
+        tags = self.context['request'].data.get('tags', None)
+        if tags:
+            obj.tags.set(list(Tag.objects.filter(name__in=tags)))
+            obj.save()
+        return obj
+
+    def create(self, validated_data):
+        obj = super().create(validated_data)
+        tags = self.context['request'].data.get('tags', None)
+        if tags:
+            obj.tags.set(list(Tag.objects.filter(name__in=tags)))
+            obj.save()
+        return obj
         
