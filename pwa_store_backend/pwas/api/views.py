@@ -65,7 +65,7 @@ class PwaViewSet(viewsets.ModelViewSet):
 
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (SearchFilter, )
-    search_fields = ['name', 'url', 'short_description', 'description', 'tags__name', 'organization__name', 'organization__description',]
+    search_fields = ['name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description',]
 
     def get_queryset(self):
         qs = super().get_queryset().select_related('pwa_analytics', 'organization')

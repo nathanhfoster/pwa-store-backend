@@ -49,7 +49,6 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     )
 
     image_url = CharField(max_length=250, null=True, blank=True)
-    short_description = CharField(max_length=80, null=True, blank=True)
     description = TextField(max_length=1000, null=True, blank=True)
     published = BooleanField(default=False)  # to filter whether to show pwa in the marketplace
 
