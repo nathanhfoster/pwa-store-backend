@@ -63,7 +63,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
         verbose_name = 'Pwa'
         verbose_name_plural = 'Pwas'
         ordering = ('name',)
-
+        # unique_together = ['url']
 
 class PwaScreenshot(TimeStampAbstractModel):
     pwa = ForeignKey(
@@ -86,7 +86,7 @@ class PwaAnalytics(TimeStampAbstractModel, AbstractArchivedModel):
     pwa = OneToOneField(Pwa, related_name='pwa_analytics', on_delete=CASCADE, null=False)
     view_count = PositiveIntegerField(default=0)
     launch_count = PositiveIntegerField(default=0)
-    rating_avg = FloatField(default=0) #holds average rating of the pwa
+    rating_avg = FloatField(null=True) #holds average rating of the pwa
     rating_count = PositiveIntegerField(default=0) #holds count of the total ratings for a pwa
 
 
