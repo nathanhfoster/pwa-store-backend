@@ -1,16 +1,17 @@
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, permissions, pagination
-from ..models import Pwa, Rating, Tag, PwaAnalytics
-from rest_framework.permissions import AllowAny
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
 import requests
 import json
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, status, permissions, pagination
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from ..models import Pwa, Rating, Tag, PwaAnalytics
 from .serializers import PwaSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
+
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size = 25
@@ -27,30 +28,30 @@ class LargeResultsSetPagination(pagination.PageNumberPagination):
 class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_permissions(self):
         # allow an authenticated user to create via POST
         if self.request.method == 'GET':
-            self.permission_classes = (permissions.AllowAny,)
+            self.permission_classes = (AllowAny,)
         if self.request.method == 'PATCH':
             self.permission_classes = (
-                permissions.IsAuthenticated,)
+                IsAuthenticated,)
         return super(TagViewSet, self).get_permissions()
 
 
 class RatingViewSet(viewsets.ModelViewSet):
     serializer_class = RatingSerializer
     queryset = Rating.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get_permissions(self):
         # allow an authenticated user to create via POST
         if self.request.method == 'GET':
-            self.permission_classes = (permissions.AllowAny,)
+            self.permission_classes = (AllowAny,)
         if self.request.method == 'PATCH':
             self.permission_classes = (
-                permissions.IsAuthenticated,)
+                IsAuthenticated,)
         return super(RatingViewSet, self).get_permissions()
 
     @action(detail=False, methods=["GET"])
@@ -61,14 +62,16 @@ class RatingViewSet(viewsets.ModelViewSet):
 
 class PwaViewSet(viewsets.ModelViewSet):
     serializer_class = PwaSerializer
+    queryset = Pwa.objects.all()
     pagination_class = StandardResultsSetPagination
-    queryset = Pwa.objects.filter(published=True)
 
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     filter_backends = (SearchFilter, )
     search_fields = ['name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description',]
 
     def get_queryset(self):
+        if self.request.method == 'GET':
+            self.queryset = super().get_queryset().filter(published=True)
         qs = super().get_queryset().select_related('pwa_analytics', 'organization')
         return qs
 
@@ -77,9 +80,7 @@ class PwaViewSet(viewsets.ModelViewSet):
         if self.request.method == 'GET':
             self.permission_classes = (AllowAny,)
         if self.request.method == 'PATCH':
-            self.permission_classes = (AllowAny,)
-            # self.permission_classes = (
-            #     permissions.IsAuthenticated,)
+            self.permission_classes = (IsAuthenticated,)
         return super(PwaViewSet, self).get_permissions()
 
     @action(methods=['get'], detail=False, url_path="get-manifest", url_name="get_manifest")
