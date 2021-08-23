@@ -80,3 +80,6 @@ The following details how to deploy this application.
 python3 -m venv env
 pip3 install -r requirements.txt/local
 source env/bin/activate
+
+unistalling
+pip freeze > unins && pip uninstall -y -r unins && rm unins
