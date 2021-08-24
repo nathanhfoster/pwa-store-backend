@@ -7,7 +7,6 @@ class UserSettingSerializer(serializers.ModelSerializer):
         model = UserSetting
         fields = ["id", "mode"]
 
-
 class UserSerializer(serializers.ModelSerializer):
     setting = UserSettingSerializer()
     class Meta:
