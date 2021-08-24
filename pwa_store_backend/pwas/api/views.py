@@ -83,16 +83,6 @@ class PwaViewSet(viewsets.ModelViewSet):
             self.permission_classes = (IsAuthenticated,)
         return super(PwaViewSet, self).get_permissions()
 
-    @action(methods=['get'], detail=False, url_path="get-manifest", url_name="get_manifest")
-    def get_manifest(self, request):
-        try:
-            url = request.query_params.get('url')
-            r = requests.get(url)
-            return Response(r.json(), status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"error": "Invalid URL"}, status=status.HTTP_406_NOT_ACCEPTABLE)
-
-
     @action(methods=['patch'], detail=False, url_path="analytics-counter")
     def increase_counts(self, request):
         data = json.loads(request.body)

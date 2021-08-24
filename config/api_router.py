@@ -18,6 +18,6 @@ router.register("tags", TagViewSet)
 
 app_name = "api"
 urlpatterns = router.urls + [
-  # DRF auth token
+  path('pwas/extra/', include("pwa_store_backend.pwas.api.urls")),
   path('auth/', include("pwa_store_backend.users.api.urls")),
 ]
