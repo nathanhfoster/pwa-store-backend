@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions, status
 from pwa_store_backend.users.models import User
 
-class StoreInfoView(APIView):
+class PwaInfoView(APIView):
     """
       parse the index page to get the manifest json from the link
     """
@@ -20,7 +20,7 @@ class StoreInfoView(APIView):
     def get(self, request, format=None):
         url = request.query_params.get('url')
         try:
-            return self.get_manifest(url + "/manifest.json")
+            return self.get_manifest(F"{url}/manifest.json")
         except Exception as e:
             print("Error", e)
 
@@ -32,6 +32,6 @@ class StoreInfoView(APIView):
             if 'http' in manifest_url:
                 return self.get_manifest(manifest_url)
             else:
-                return self.get_manifest(url + manifest_url)
+                return self.get_manifest(F"{url}manifest_url")
         except Exception as e:
             return Response({"error": "Invalid URL"}, status=status.HTTP_406_NOT_ACCEPTABLE)
