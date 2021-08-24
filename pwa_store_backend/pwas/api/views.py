@@ -118,12 +118,14 @@ class PwaViewSet(viewsets.ModelViewSet):
         rating = data.get('rating')
         comment = data.get('comment')
         created_by = request.user
+        updated_by = created_by
         try: 
             obj = Rating(
               pwa_id=pwa_id,
               rating=rating,
               comment=comment,
               created_by=created_by,
+              updated_by=updated_by
             )
             obj.save()
             # update analytics
@@ -144,15 +146,18 @@ class PwaViewSet(viewsets.ModelViewSet):
         rating = data.get('rating')
         comment = data.get('comment')
         created_by = request.user
+        updated_by = created_by
 
         try: 
             obj = Rating.objects.get(pk=pk, created_by=created_by)
-        
+            past_rating = obj.rating
+            obj.updated_by = updated_by
             obj.rating = rating
             obj.comment = comment
             obj.save()
             # update analytics
             analytic = get_object_or_404(PwaAnalytics, pwa_id=pwa_id)
+            analytic.rating_avg -= past_rating
             analytic.rating_avg = (analytic.rating_avg + obj.rating) / analytic.rating_count
             analytic.save()
 
