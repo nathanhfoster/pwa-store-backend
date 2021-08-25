@@ -32,7 +32,7 @@ class PwaScreenshot(serializers.ModelSerializer):
 class PwaAnalyticsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PwaAnalytics
-        fields = ('view_count', 'launch_count')
+        fields = ('view_count', 'launch_count', 'rating_avg', 'rating_count', )
 
 class PwaOrganizationSerializer(serializers.ModelSerializer):
     class Meta:
