@@ -1,8 +1,9 @@
-from rest_framework import serializers
+from rest_framework import serializers, validators
 from pwa_store_backend.users.models import User
 from ..models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
 from ...organizations.models import Organization
-
+from pwa_store_backend.utils.validators import HasValidJson
+import json
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,6 +55,11 @@ class PwaSerializer(serializers.ModelSerializer):
                   'ratings', 'organization', 'pwa_analytics', 'pwa_screenshots',
                   'tags', 'image_url', 'updated_at')
         read_only_fields = ('id', 'created_at', 'updated_at')
+        extra_kwargs = {
+            'manifest_json': {'write_only': True},
+        }
+        # TODO
+        # validators = [HasValidJson('manifest_json')]
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
@@ -70,4 +76,17 @@ class PwaSerializer(serializers.ModelSerializer):
             obj.tags.set(list(Tag.objects.filter(name__in=tags)))
             obj.save()
         return obj
-        
+
+class PwaDetailSerializer(PwaSerializer):
+    manifest_json = serializers.JSONField(required=False, allow_null=True)
+
+    def to_representation(self, instance):
+        ret = super(PwaDetailSerializer, self).to_representation(instance)
+        ret['manifest_json'] = json.loads(ret['manifest_json'])
+        return ret
+
+    def get_additional_field(self, obj):
+        return('not important')
+
+    class Meta(PwaSerializer.Meta):
+        fields = PwaSerializer.Meta.fields + ('manifest_json',)

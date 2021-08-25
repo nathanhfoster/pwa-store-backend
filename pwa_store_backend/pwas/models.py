@@ -16,6 +16,8 @@ from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator
 from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
 from django.core.validators import MinLengthValidator
+from pwa_store_backend.utils.validators import validate_json
+from django.core.exceptions import ValidationError
 
 
 class Tag(TimeStampAbstractModel):
@@ -34,7 +36,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = CharField(validators=[MinLengthValidator(3)], max_length=50)
     url = CharField(validators=[MinLengthValidator(13)], max_length=250)
     manifest_url = CharField(validators=[MinLengthValidator(5)], max_length=100, null=True)
-    manifest_json = TextField(validators=[MinLengthValidator(15)], null=True)
+    manifest_json = TextField(validators=[validate_json], max_length=5000, null=True)
     slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, blank=True)
     organization = ForeignKey(
         Organization,
@@ -51,6 +53,10 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     image_url = CharField(max_length=250, null=True, blank=True)
     description = TextField(max_length=1000, null=True, blank=True)
     published = BooleanField(default=False)  # to filter whether to show pwa in the marketplace
+
+    def clean(self):
+        if validate_json(self.manifest_json):
+            raise ValidationError("Not a valid JSON string")
 
     def __str__(self):
         return self.name

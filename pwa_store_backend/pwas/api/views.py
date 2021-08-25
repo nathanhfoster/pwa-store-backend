@@ -10,7 +10,7 @@ from rest_framework import viewsets, status, permissions, pagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from ..models import Pwa, Rating, Tag, PwaAnalytics
-from .serializers import PwaSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
+from .serializers import PwaSerializer, PwaDetailSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
 
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):
@@ -79,11 +79,9 @@ class PwaViewSet(viewsets.ModelViewSet):
         # allow an authenticated user to create via POST
         if self.request.method == 'GET':
             self.permission_classes = (AllowAny,)
-        if self.request.method == 'PATCH':
-            self.permission_classes = (IsAuthenticated,)
         return super(PwaViewSet, self).get_permissions()
 
-    @action(methods=['patch'], detail=False, url_path="analytics-counter")
+    @action(methods=['patch'], detail=False, url_path="analytics-counter", permission_classes=[AllowAny,])
     def increase_counts(self, request):
         data = json.loads(request.body)
         try:
@@ -98,7 +96,7 @@ class PwaViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         qs = self.get_queryset()
-        serializer = PwaSerializer(qs.get(id=data.get('pwa_id')), context={ 'request': request })
+        serializer = PwaDetailSerializer(qs.get(id=data.get('pwa_id')), context={ 'request': request })
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['post'], detail=False, url_path="post-rating")
