@@ -16,4 +16,4 @@ class HasValidJson:
 
     def __call__(self, value):
         if validate_json(value):
-            raise ValidationError("Not a valid JSON string")
+            raise ValidationError("manifest_json is not a valid JSON")

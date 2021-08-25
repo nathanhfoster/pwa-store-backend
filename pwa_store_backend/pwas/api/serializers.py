@@ -85,8 +85,6 @@ class PwaDetailSerializer(PwaSerializer):
         ret['manifest_json'] = json.loads(ret['manifest_json'])
         return ret
 
-    def get_additional_field(self, obj):
-        return('not important')
 
     class Meta(PwaSerializer.Meta):
         fields = PwaSerializer.Meta.fields + ('manifest_json',)
