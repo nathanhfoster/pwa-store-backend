@@ -15,7 +15,12 @@ class PwaInfoView(APIView):
 
     def get_manifest(self, url):
         r = requests.get(url)
-        return Response(r.json(), status=status.HTTP_200_OK)
+        json_response = r.json()
+        final_response = {
+          "manifest_url": url,
+          "manifest_json": json_response,
+        }
+        return Response(final_response, status=status.HTTP_200_OK)
 
     def get(self, request, format=None):
         url = request.query_params.get('url')
