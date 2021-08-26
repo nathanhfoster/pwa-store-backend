@@ -83,3 +83,18 @@ pip3 install -r requirements/local.txt
 
 unistalling
 pip freeze > unins && pip uninstall -y -r unins && rm unins
+
+start postgres on local for mac
+>>> brew services start postgresql
+Restart postgres on local for mac
+>>> brew services restart postgresql
+Stop postgres on local for mac
+>>> brew services stop postgresql
+
+start postgres cli
+>>> psql postgres
+
+Inside the cli run following commands
+# CREATE DATABASE pwa_store_db;
+# CREATE USER pwa_user WITH ENCRYPTED PASSWORD 'pwatotheworld';
+# GRANT ALL PRIVILEGES ON DATABASE pwa_store_db TO pwa_user;

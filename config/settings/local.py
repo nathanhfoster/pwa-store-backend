@@ -81,7 +81,16 @@ INSTALLED_APPS += ["django_extensions"]  # noqa F405
 # Your stuff...
 # ------------------------------------------------------------------------------
 # DATABASES
+# DATABASES['default'] = {
+#     'ENGINE': 'django.db.backends.sqlite3',
+#     'NAME': os.path.join(ROOT_DIR, 'db.sqlite3'),
+# }
+
 DATABASES['default'] = {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': os.path.join(ROOT_DIR, 'db.sqlite3'),
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': 'pwa_store_db',
+    'USER': 'pwa_user',
+    'PASSWORD': 'pwatotheworld',
+    'HOST': 'localhost',
+    'PORT': '',
 }
