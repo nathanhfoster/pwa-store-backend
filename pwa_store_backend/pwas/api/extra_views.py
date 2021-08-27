@@ -5,6 +5,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import authentication, permissions, status
 from pwa_store_backend.users.models import User
+import re
+
+manifest_regex = r"\/manifest.json([^&]*)"
 
 class PwaInfoView(APIView):
     """
@@ -25,7 +28,7 @@ class PwaInfoView(APIView):
     def get(self, request, format=None):
         url = request.query_params.get('url')
         try:
-            return self.get_manifest(F"{url}/manifest.json")
+            return self.get_manifest(url if re.search(manifest_regex, url) else F"{url}/manifest.json")
         except Exception as e:
             print("Error", e)
 
