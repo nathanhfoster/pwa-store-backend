@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.viewsets import  ModelViewSet
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import update_last_login
@@ -16,6 +16,23 @@ from pwa_store_backend.pwas.api.serializers import PwaSerializer
 
 User = get_user_model()
 
+
+def get_user_response(token, user, user_setting):
+    return {
+        'token': token.key,
+        'id': user.pk,
+        'username': user.username,
+        'name': user.name,
+        'email': user.email,
+        'setting': user_setting,
+        'is_active': user.is_active,
+        'is_superuser': user.is_superuser,
+        'is_staff': user.is_staff,
+        'last_login': user.last_login,
+        'date_joined': user.date_joined,
+    }
+
+
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -25,7 +42,7 @@ class UserViewSet(ModelViewSet):
 
     @action(detail=False, methods=["GET"])
     def me(self, request):
-        serializer = UserSerializer(request.user, context={ "request": request })
+        serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
@@ -46,19 +63,7 @@ class RegisterView(ObtainAuthToken):
         update_last_login(None, user)
         token, created = Token.objects.get_or_create(user=user)
         setting_serializer = UserSettingSerializer(user.setting)
-        return Response({
-            'token': token.key,
-            'id': user.pk,
-            'username': user.username,
-            'name': user.name,
-            'email': user.email,
-            'setting': setting_serializer.data,
-            'is_active': user.is_active,
-            'is_superuser': user.is_superuser,
-            'is_staff': user.is_staff,
-            'last_login': user.last_login,
-            'date_joined': user.date_joined,
-        })
+        return Response(get_user_response(token, user, setting_serializer.data))
 
 
 class LoginView(ObtainAuthToken):
@@ -71,19 +76,7 @@ class LoginView(ObtainAuthToken):
         update_last_login(None, user)
         token = get_object_or_404(Token, user=user)
         setting_serializer = UserSettingSerializer(user.setting)
-        return Response({
-            'token': token.key,
-            'id': user.pk,
-            'username': user.username,
-            'name': user.name,
-            'email': user.email,
-            'setting': setting_serializer.data,
-            'is_active': user.is_active,
-            'is_superuser': user.is_superuser,
-            'is_staff': user.is_staff,
-            'last_login': user.last_login,
-            'date_joined': user.date_joined,
-        })
+        return Response(get_user_response(token, user, setting_serializer.data))
 
 
 class UpdateSettingsView(generics.UpdateAPIView):
