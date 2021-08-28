@@ -4,7 +4,7 @@ from import_export.fields import Field
 from import_export.resources import ModelResource
 from import_export.admin import ImportExportActionModelAdmin
 from import_export.widgets import ManyToManyWidget
-
+from .admin_forms import PwaAdminForm
 
 class PwaResource(ModelResource):
     tags = Field(widget=ManyToManyWidget(Tag))
@@ -20,15 +20,14 @@ class PwaResource(ModelResource):
 
 class PwaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = PwaResource
-
+    form = PwaAdminForm
     list_display = ('id', 'name', 'url',
                     'organization', 'get_tags', 'published', 'description',
                     'created_at', 'updated_at',)
     list_display_links = ('id', 'name', 'organization', )
     search_fields = ('id', 'name', 'url', 'slug',
                      'organization__name', 'tags__name', 'description',)
-    # autocomplete_fields = ('organization', )
-
+    
 
 class TagResource(ModelResource):
     class Meta:

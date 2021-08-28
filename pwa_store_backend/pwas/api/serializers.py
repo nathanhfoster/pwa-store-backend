@@ -53,13 +53,9 @@ class PwaSerializer(serializers.ModelSerializer):
         model = Pwa
         fields = ('id', 'published', 'name', 'url', 'description',
                   'ratings', 'organization', 'manifest_url', 'pwa_analytics', 'pwa_screenshots',
-                  'tags', 'image_url', 'updated_at')
+                  'tags', 'image_url', 'updated_at', "manifest_json")
         read_only_fields = ('id', 'created_at', 'updated_at')
-        extra_kwargs = {
-            'manifest_json': {'write_only': True},
-        }
         # TODO
-        # validators = [HasValidJson('manifest_json')]
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)
