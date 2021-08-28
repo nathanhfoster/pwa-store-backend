@@ -4,17 +4,16 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import update_last_login
 from rest_framework import generics
-from pwa_store_backend.users.models import UserSetting
+from pwa_store_backend.users.models import UserSetting, User
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import UserSerializer, UserSettingSerializer
 from pwa_store_backend.pwas.models import Pwa
 from pwa_store_backend.pwas.api.serializers import PwaSerializer
-
-User = get_user_model()
 
 
 def get_user_response(token, user):
@@ -54,14 +53,20 @@ class UserViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-class RegisterView(ObtainAuthToken):
+class RegisterView(APIView):
     permission_classes = (AllowAny,)
+    serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        token, created = Token.objects.get_or_create(user=user)
+        validated_data = serializer.validated_data
+        user = User.objects.create(
+          username=validated_data['username'],
+        )
+        user.set_password(validated_data['password'])
+        user.save()
+        token = Token.objects.create(user=user)
         return Response(get_user_response(token, user))
 
 
