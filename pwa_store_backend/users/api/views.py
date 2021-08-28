@@ -17,7 +17,9 @@ from pwa_store_backend.pwas.api.serializers import PwaSerializer
 User = get_user_model()
 
 
-def get_user_response(token, user, user_setting):
+def get_user_response(token, user):
+    update_last_login(None, user)
+    user_setting = UserSettingSerializer(user.setting).data
     return {
         'token': token.key,
         'id': user.pk,
@@ -49,7 +51,6 @@ class UserViewSet(ModelViewSet):
     def pwas(self, request, pk):
         queryset = Pwa.objects.all().filter(created_by=pk)
         serializer = PwaSerializer(queryset, many=True)
-
         return Response(serializer.data)
 
 
@@ -60,10 +61,8 @@ class RegisterView(ObtainAuthToken):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        update_last_login(None, user)
         token, created = Token.objects.get_or_create(user=user)
-        setting_serializer = UserSettingSerializer(user.setting)
-        return Response(get_user_response(token, user, setting_serializer.data))
+        return Response(get_user_response(token, user))
 
 
 class LoginView(ObtainAuthToken):
@@ -73,10 +72,8 @@ class LoginView(ObtainAuthToken):
         serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        update_last_login(None, user)
         token = get_object_or_404(Token, user=user)
-        setting_serializer = UserSettingSerializer(user.setting)
-        return Response(get_user_response(token, user, setting_serializer.data))
+        return Response(get_user_response(token, user))
 
 
 class UpdateSettingsView(generics.UpdateAPIView):
