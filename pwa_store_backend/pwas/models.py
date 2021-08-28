@@ -9,7 +9,8 @@ from django.db.models import (
   PositiveIntegerField,
   TextField,
   BooleanField,
-  FloatField
+  FloatField,
+  JSONField
 )
 from django.db.models.signals import post_save
 from pwa_store_backend.organizations.models import Organization
@@ -34,10 +35,10 @@ class Tag(TimeStampAbstractModel):
 
 class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = CharField(validators=[MinLengthValidator(3)], max_length=50)
-    url = CharField(validators=[MinLengthValidator(13)], max_length=250)
+    url = CharField(validators=[MinLengthValidator(13)], max_length=250, unique=True)
     manifest_url = CharField(validators=[MinLengthValidator(5)], max_length=100, null=True)
-    manifest_json = TextField(validators=[validate_json], max_length=5000, null=True)
-    slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, blank=True)
+    manifest_json = JSONField(null=True)
+    slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, unique=True, blank=True)
     organization = ForeignKey(
         Organization,
         related_name='organization',
