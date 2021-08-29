@@ -30,3 +30,18 @@ class UserSerializer(ModelSerializer):
             'username': {'write_only': True},
             'password': {'write_only': True},
         }
+
+    def create(self, validated_data):
+        user = User()
+        user.set_password(validated_data['password'])
+        validated_data['password'] = user.password
+        return super(UserSerializer, self).create(validated_data)
+
+    def update(self, instance, validated_data):
+        for attr, value in validated_data.items():
+            if attr == 'password':
+                instance.set_password(value)
+            else:
+                setattr(instance, attr, value)
+        instance.save()
+        return instance

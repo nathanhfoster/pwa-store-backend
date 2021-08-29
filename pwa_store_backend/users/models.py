@@ -1,15 +1,15 @@
 from django.contrib.auth.models import AbstractUser
 from pwa_store_backend.pwas.models import Pwa
 from django.db.models import (
-  CharField,
-  ForeignKey,
-  CASCADE,
-  SET_NULL,
-  OneToOneField,
+    CharField,
+    ForeignKey,
+    CASCADE,
+    SET_NULL,
+    OneToOneField,
 )
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.conf import settings
 from pwa_store_backend.utils.models import TimeStampAbstractModel, TimeStampAbstractModel, AbstractArchivedModel
 
@@ -68,6 +68,6 @@ class FavoritePwa(TimeStampAbstractModel, AbstractArchivedModel):
     def __str__(self):
         return self.pwa.name
 
-
-from pwa_store_backend.users.signals import user_post_save_handler
+from pwa_store_backend.users.signals import user_pre_save_create_hash, user_post_save_handler
+# pre_save.connect(user_pre_save_create_hash, sender=User)
 post_save.connect(user_post_save_handler, sender=User)
