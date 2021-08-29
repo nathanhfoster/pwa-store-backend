@@ -9,7 +9,7 @@ from django.db.models import (
 )
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import pre_init, pre_save, post_save
 from django.conf import settings
 from pwa_store_backend.utils.models import TimeStampAbstractModel, TimeStampAbstractModel, AbstractArchivedModel
 
@@ -68,6 +68,7 @@ class FavoritePwa(TimeStampAbstractModel, AbstractArchivedModel):
     def __str__(self):
         return self.pwa.name
 
-from pwa_store_backend.users.signals import user_pre_save_create_hash, user_post_save_handler
+from pwa_store_backend.users.signals import user_pre_init_create_hash, user_pre_save_create_hash, user_post_save_handler
+# pre_init.connect(user_pre_init_create_hash, sender=User)
 # pre_save.connect(user_pre_save_create_hash, sender=User)
 post_save.connect(user_post_save_handler, sender=User)
