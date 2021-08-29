@@ -9,9 +9,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import update_last_login
 from rest_framework import generics
-from pwa_store_backend.users.models import UserSetting, User
+from pwa_store_backend.users.models import UserSetting, User, FavoritePwa
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import UserSerializer, UserSettingSerializer
+from .serializers import UserSerializer, UserSettingSerializer, FavoritePwaSerializer, FavoritePwaSerializer
 from pwa_store_backend.pwas.models import Pwa
 from pwa_store_backend.pwas.api.serializers import PwaSerializer
 
@@ -53,7 +53,7 @@ class UserViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
-class RegisterView(APIView):
+class RegisterViewSet(APIView):
     permission_classes = (AllowAny,)
     serializer_class = UserSerializer
 
@@ -62,7 +62,7 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         validated_data = serializer.validated_data
         user = User.objects.create(
-          username=validated_data['username'],
+            username=validated_data['username'],
         )
         user.set_password(validated_data['password'])
         user.save()
@@ -70,7 +70,7 @@ class RegisterView(APIView):
         return Response(get_user_response(token, user))
 
 
-class LoginView(ObtainAuthToken):
+class LoginViewSet(ObtainAuthToken):
     permission_classses = (AllowAny,)
 
     def post(self, request, *args, **kwargs):
@@ -81,6 +81,18 @@ class LoginView(ObtainAuthToken):
         return Response(get_user_response(token, user))
 
 
-class UpdateSettingsView(generics.UpdateAPIView):
+class UpdateSettingsViewSet(generics.UpdateAPIView):
     queryset = UserSetting.objects.all()
     serializer_class = UserSettingSerializer
+
+
+class FavoritePwaViewSet(ModelViewSet):
+    serializer_class = FavoritePwaSerializer
+    queryset = FavoritePwa.objects.all()
+    permission_classes = (IsAuthenticated,)
+
+    def get_permissions(self):
+        if self.request.method == 'PATCH':
+            self.permission_classes = (
+                IsAuthenticated,)
+        return super(FavoritePwaViewSet, self).get_permissions()

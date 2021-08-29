@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db.models import (
   CharField,
   SlugField,
@@ -17,8 +16,9 @@ from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator
 from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
 from django.core.validators import MinLengthValidator
-from pwa_store_backend.utils.validators import validate_json, HasValidJson
+from pwa_store_backend.utils.validators import validate_json
 from django.core.exceptions import ValidationError
+import json
 
 
 class Tag(TimeStampAbstractModel):
@@ -37,7 +37,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     name = CharField(validators=[MinLengthValidator(3)], max_length=50)
     url = CharField(validators=[MinLengthValidator(13)], max_length=250, unique=True)
     manifest_url = CharField(validators=[MinLengthValidator(5)], max_length=100, null=True)
-    manifest_json = JSONField(default=dict, blank=True)
+    manifest_json = JSONField(default=json.dumps({}))
     slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, unique=True, blank=True)
     organization = ForeignKey(
         Organization,
@@ -122,22 +122,6 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
         verbose_name_plural = 'Ratings'
         ordering = ('rating',)
         unique_together = ['pwa', 'created_by']
-
-
-class FavoritePwa(TimeStampAbstractModel, AbstractArchivedModel):
-    user = ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='user_favorites',
-        on_delete=CASCADE,
-    )
-    pwa = ForeignKey(
-        Pwa,
-        related_name='pwa_favorites',
-        on_delete=CASCADE,
-    )
-
-    def __str__(self):
-        return self.pwa.name
 
 
 # while working with signals imports should be at bottom to avoid circular signals
