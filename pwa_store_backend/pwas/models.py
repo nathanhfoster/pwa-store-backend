@@ -70,7 +70,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
         verbose_name = 'Pwa'
         verbose_name_plural = 'Pwas'
         ordering = ('name',)
-        # unique_together = ['url', 'slug']
+
 
 class PwaScreenshot(TimeStampAbstractModel):
     pwa = ForeignKey(
