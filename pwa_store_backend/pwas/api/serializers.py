@@ -2,7 +2,6 @@ from rest_framework import serializers, validators
 from pwa_store_backend.users.models import User
 from ..models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
 from ...organizations.models import Organization
-from pwa_store_backend.utils.validators import HasValidJson
 import json
 
 class TagSerializer(serializers.ModelSerializer):
@@ -53,7 +52,7 @@ class PwaSerializer(serializers.ModelSerializer):
         model = Pwa
         fields = ('id', 'published', 'name', 'url', 'description',
                   'ratings', 'organization', 'manifest_url', 'pwa_analytics', 'pwa_screenshots',
-                  'tags', 'image_url', 'updated_at', "manifest_json")
+                  'tags', 'image_url', 'updated_at',)
         read_only_fields = ('id', 'created_at', 'updated_at')
         # TODO
 

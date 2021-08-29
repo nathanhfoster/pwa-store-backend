@@ -1,6 +1,7 @@
 import json
 from django import forms
 from .models import Pwa
+from pwa_store_backend.utils.validators import validate_json
 
 
 class PwaAdminForm(forms.ModelForm):
@@ -10,7 +11,7 @@ class PwaAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         instance = kwargs.get('instance')
-        if instance.manifest_json:
+        if instance and validate_json(instance.manifest_json):
             instance.manifest_json = json.loads(instance.manifest_json)
         super().__init__(*args, **kwargs)
 
