@@ -40,6 +40,13 @@ class PwaOrganizationSerializer(ModelSerializer):
         fields = ('id', 'name', 'description')
         read_only_fields = ('id', 'created_at', 'updated_at')
 
+class PwaMinimalSerializer(ModelSerializer):
+    # tags = TagSerializer(many=True, read_only=True, required=False)
+
+    class Meta:
+        model = Pwa
+        fields = ('id', 'name', 'url', 'image_url',)
+        read_only_fields = ('id', 'created_at', 'updated_at', 'tags')
 
 class PwaSerializer(ModelSerializer):
     tags = TagSerializer(many=True, read_only=True, required=False)
@@ -54,7 +61,6 @@ class PwaSerializer(ModelSerializer):
                   'ratings', 'organization', 'manifest_url', 'pwa_analytics', 'pwa_screenshots',
                   'tags', 'image_url', 'updated_at',)
         read_only_fields = ('id', 'created_at', 'updated_at')
-        # TODO
 
     def update(self, instance, validated_data):
         obj = super().update(instance, validated_data)

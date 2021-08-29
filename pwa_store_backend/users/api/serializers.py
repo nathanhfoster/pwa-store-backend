@@ -1,7 +1,6 @@
 from rest_framework.serializers import ModelSerializer
-from pwa_store_backend.users.models import User, UserSetting
-from ..models import FavoritePwa
-from pwa_store_backend.pwas.api.serializers import PwaSerializer
+from pwa_store_backend.users.models import User, UserSetting, FavoritePwa
+from pwa_store_backend.pwas.api.serializers import PwaMinimalSerializer
 
 
 class UserSettingSerializer(ModelSerializer):
@@ -12,7 +11,7 @@ class UserSettingSerializer(ModelSerializer):
 
 
 class FavoritePwaSerializer(ModelSerializer):
-    pwa = PwaSerializer(many=False, read_only=True, required=False)
+    pwa = PwaMinimalSerializer(many=False, read_only=True, required=False)
 
     class Meta:
         model = FavoritePwa
@@ -22,11 +21,11 @@ class FavoritePwaSerializer(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
     setting = UserSettingSerializer(required=False)
-    user_favorites = FavoritePwaSerializer(many=True, read_only=True, required=False)
+    user_favorites = FavoritePwaSerializer(many=True, read_only=False, required=False)
 
     class Meta:
         model = User
-        fields = ("id", "name", "setting", "user_favorites", "username", "password",)
+        fields = ("id", "name", 'email', "setting", "user_favorites", "username", "password",)
         extra_kwargs = {
             'username': {'write_only': True},
             'password': {'write_only': True},
