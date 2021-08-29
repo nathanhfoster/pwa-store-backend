@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.db.models import (
   CharField,
   SlugField,
@@ -123,22 +122,6 @@ class Rating(TimeStampAbstractModel, OwnerAbstractModel):
         verbose_name_plural = 'Ratings'
         ordering = ('rating',)
         unique_together = ['pwa', 'created_by']
-
-
-class FavoritePwa(TimeStampAbstractModel, AbstractArchivedModel):
-    user = ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name='user_favorites',
-        on_delete=CASCADE,
-    )
-    pwa = ForeignKey(
-        Pwa,
-        related_name='pwa_favorites',
-        on_delete=CASCADE,
-    )
-
-    def __str__(self):
-        return self.pwa.name
 
 
 # while working with signals imports should be at bottom to avoid circular signals

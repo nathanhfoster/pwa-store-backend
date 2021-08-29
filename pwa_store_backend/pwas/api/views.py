@@ -6,7 +6,8 @@ from rest_framework.filters import SearchFilter
 import requests
 import json
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, status, permissions, pagination
+from rest_framework import status, pagination
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from ..models import Pwa, Rating, Tag, PwaAnalytics
@@ -25,7 +26,7 @@ class LargeResultsSetPagination(pagination.PageNumberPagination):
     max_page_size = 1000
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(ModelViewSet):
     serializer_class = TagSerializer
     queryset = Tag.objects.all()
     permission_classes = (IsAuthenticated,)
@@ -40,7 +41,7 @@ class TagViewSet(viewsets.ModelViewSet):
         return super(TagViewSet, self).get_permissions()
 
 
-class RatingViewSet(viewsets.ModelViewSet):
+class RatingViewSet(ModelViewSet):
     serializer_class = RatingSerializer
     queryset = Rating.objects.all()
     permission_classes = (IsAuthenticated,)
@@ -60,14 +61,14 @@ class RatingViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
-class PwaViewSet(viewsets.ModelViewSet):
+class PwaViewSet(ModelViewSet):
     serializer_class = PwaSerializer
     queryset = Pwa.objects.all()
     pagination_class = StandardResultsSetPagination
 
     permission_classes = (IsAuthenticated,)
     filter_backends = (SearchFilter, )
-    search_fields = ['name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description',]
+    search_fields = ['name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description', ]
 
     def get_queryset(self):
         if self.request.method == 'GET':
@@ -81,7 +82,7 @@ class PwaViewSet(viewsets.ModelViewSet):
             self.permission_classes = (AllowAny,)
         return super(PwaViewSet, self).get_permissions()
 
-    @action(methods=['patch'], detail=False, url_path="analytics-counter", permission_classes=[AllowAny,])
+    @action(methods=['patch'], detail=False, url_path="analytics-counter", permission_classes=[AllowAny, ])
     def increase_counts(self, request):
         data = json.loads(request.body)
         try:
@@ -96,7 +97,7 @@ class PwaViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         qs = self.get_queryset()
-        serializer = PwaDetailSerializer(qs.get(id=data.get('pwa_id')), context={ 'request': request })
+        serializer = PwaDetailSerializer(qs.get(id=data.get('pwa_id')), context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['post'], detail=False, url_path="post-rating")
@@ -107,13 +108,13 @@ class PwaViewSet(viewsets.ModelViewSet):
         comment = data.get('comment')
         created_by = request.user
         updated_by = created_by
-        try: 
+        try:
             obj = Rating(
-              pwa_id=pwa_id,
-              rating=rating,
-              comment=comment,
-              created_by=created_by,
-              updated_by=updated_by
+                pwa_id=pwa_id,
+                rating=rating,
+                comment=comment,
+                created_by=created_by,
+                updated_by=updated_by
             )
             obj.save()
             # update analytics
@@ -136,7 +137,7 @@ class PwaViewSet(viewsets.ModelViewSet):
         created_by = request.user
         updated_by = created_by
 
-        try: 
+        try:
             obj = Rating.objects.get(pk=pk, created_by=created_by)
             past_rating = obj.rating
             obj.updated_by = updated_by

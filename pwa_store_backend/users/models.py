@@ -1,11 +1,17 @@
 from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.db.models import CharField, OneToOneField
+from pwa_store_backend.pwas.models import Pwa
+from django.db.models import (
+  CharField,
+  ForeignKey,
+  CASCADE,
+  SET_NULL,
+  OneToOneField,
+)
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_save
-
-from pwa_store_backend.utils.models import TimeStampAbstractModel
+from django.conf import settings
+from pwa_store_backend.utils.models import TimeStampAbstractModel, TimeStampAbstractModel, AbstractArchivedModel
 
 
 class UserSetting(TimeStampAbstractModel):
@@ -35,7 +41,7 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), blank=True, max_length=255)
     first_name = None  # type: ignore
     last_name = None  # type: ignore
-    setting = OneToOneField(UserSetting, on_delete=models.SET_NULL, null=True)
+    setting = OneToOneField(UserSetting, on_delete=SET_NULL, null=True)
 
     def get_absolute_url(self):
         """Get url for user's detail view.
@@ -45,6 +51,22 @@ class User(AbstractUser):
 
         """
         return reverse("users:detail", kwargs={"username": self.username})
+
+
+class FavoritePwa(TimeStampAbstractModel, AbstractArchivedModel):
+    user = ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='user_favorites',
+        on_delete=CASCADE,
+    )
+    pwa = ForeignKey(
+        Pwa,
+        related_name='pwa_favorites',
+        on_delete=CASCADE,
+    )
+
+    def __str__(self):
+        return self.pwa.name
 
 
 from pwa_store_backend.users.signals import user_post_save_handler

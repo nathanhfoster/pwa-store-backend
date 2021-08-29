@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from import_export.resources import ModelResource
+from import_export.admin import ImportExportActionModelAdmin
 
-from .models import UserSetting
+from .models import UserSetting, FavoritePwa
 from pwa_store_backend.users.forms import UserChangeForm, UserCreationForm
 
 User = get_user_model()
@@ -36,4 +38,17 @@ class UserAdmin(auth_admin.UserAdmin):
     search_fields = ["name"]
 
 
+class FavoritePwaResource(ModelResource):
+    class Meta:
+        model = FavoritePwa
+        fields = '__all__'
+
+
+class FavoritePwaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
+    model = FavoritePwaResource
+    list_display_links = ('pwa', 'user')
+    list_display = ('pwa', 'user')
+
+
 admin.site.register(UserSetting)
+admin.site.register(FavoritePwa, FavoritePwaAdmin)

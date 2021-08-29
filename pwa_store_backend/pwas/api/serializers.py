@@ -1,21 +1,21 @@
-from rest_framework import serializers, validators
+from rest_framework.serializers import ModelSerializer, JSONField
 from pwa_store_backend.users.models import User
 from ..models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
 from ...organizations.models import Organization
 import json
 
-class TagSerializer(serializers.ModelSerializer):
+class TagSerializer(ModelSerializer):
     class Meta:
         model = Tag
         fields = ('name',)
         read_only_fields = ('created_at', 'updated_at')
 
-class RatingUserField(serializers.ModelSerializer):
+class RatingUserField(ModelSerializer):
     class Meta:
         model = User
         fields = ("id", "name",)
 
-class RatingSerializer(serializers.ModelSerializer):
+class RatingSerializer(ModelSerializer):
     created_by = RatingUserField()
     class Meta:
         model = Rating
@@ -23,25 +23,25 @@ class RatingSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'pwa', 'created_at', 'updated_at')
 
 
-class PwaScreenshot(serializers.ModelSerializer):
+class PwaScreenshot(ModelSerializer):
     class Meta:
         model = PwaScreenshot
         fields = ('image_url', 'caption', )
 
 
-class PwaAnalyticsSerializer(serializers.ModelSerializer):
+class PwaAnalyticsSerializer(ModelSerializer):
     class Meta:
         model = PwaAnalytics
         fields = ('view_count', 'launch_count', 'rating_avg', 'rating_count', )
 
-class PwaOrganizationSerializer(serializers.ModelSerializer):
+class PwaOrganizationSerializer(ModelSerializer):
     class Meta:
         model = Organization
         fields = ('id', 'name', 'description')
         read_only_fields = ('id', 'created_at', 'updated_at')
 
 
-class PwaSerializer(serializers.ModelSerializer):
+class PwaSerializer(ModelSerializer):
     tags = TagSerializer(many=True, read_only=True, required=False)
     ratings = RatingSerializer(many=True, read_only=True, required=False)
     pwa_analytics = PwaAnalyticsSerializer(read_only=True)
@@ -73,7 +73,7 @@ class PwaSerializer(serializers.ModelSerializer):
         return obj
 
 class PwaDetailSerializer(PwaSerializer):
-    manifest_json = serializers.JSONField(required=False, allow_null=True)
+    manifest_json = JSONField(required=False, allow_null=True)
 
     def to_representation(self, instance):
         ret = super(PwaDetailSerializer, self).to_representation(instance)
