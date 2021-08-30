@@ -54,12 +54,13 @@ class PwaSerializer(ModelSerializer):
     pwa_analytics = PwaAnalyticsSerializer(read_only=True)
     pwa_screenshots = PwaScreenshot(many=True, read_only=True)
     organization = PwaOrganizationSerializer(many=False, read_only=True, required=False)
-
+    
     class Meta:
         model = Pwa
-        fields = ('id', 'published', 'name', 'url', 'description',
+        fields = ('id', 'slug', 'published', 'name', 'url', 'description',
                   'ratings', 'organization', 'manifest_url', 'pwa_analytics', 'pwa_screenshots',
                   'tags', 'image_url', 'updated_at',)
+        lookup_field = 'slug'
         read_only_fields = ('id', 'created_at', 'updated_at')
 
     def update(self, instance, validated_data):

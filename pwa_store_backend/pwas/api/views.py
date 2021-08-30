@@ -65,15 +65,16 @@ class PwaViewSet(ModelViewSet):
     serializer_class = PwaSerializer
     queryset = Pwa.objects.all()
     pagination_class = StandardResultsSetPagination
-
+    lookup_field = 'slug'
     permission_classes = (IsAuthenticated,)
     filter_backends = (SearchFilter, )
     search_fields = ['name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description', ]
 
     def get_queryset(self):
-        if self.request.method == 'GET':
-            self.queryset = super().get_queryset().filter(published=True)
-        qs = super().get_queryset().select_related('pwa_analytics', 'organization')
+        if self.request.parser_context['kwargs'].get('slug', None):
+            qs = super().get_queryset().select_related('pwa_analytics', 'organization')
+        else:
+            qs = super().get_queryset().filter(published=True).select_related('pwa_analytics', 'organization')
         return qs
 
     def get_permissions(self):
@@ -86,7 +87,7 @@ class PwaViewSet(ModelViewSet):
     def increase_counts(self, request):
         data = json.loads(request.body)
         try:
-            analytics_obj = PwaAnalytics.objects.get(pwa__id=data.get('pwa_id'))
+            analytics_obj = PwaAnalytics.objects.get(pwa__slug=data.get('slug'))
             if data.get('incr_view', False):
                 analytics_obj.view_count += 1
             elif data.get('incr_launch', False):
@@ -97,7 +98,7 @@ class PwaViewSet(ModelViewSet):
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         qs = self.get_queryset()
-        serializer = PwaDetailSerializer(qs.get(id=data.get('pwa_id')), context={'request': request})
+        serializer = PwaDetailSerializer(qs.get(slug=data.get('slug')), context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['post'], detail=False, url_path="post-rating")

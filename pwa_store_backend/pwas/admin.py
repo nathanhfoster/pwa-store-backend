@@ -21,10 +21,9 @@ class PwaResource(ModelResource):
 class PwaAdmin(ImportExportActionModelAdmin, admin.ModelAdmin):
     resource_class = PwaResource
     form = PwaAdminForm
-    list_display = ('id', 'name', 'url',
-                    'organization', 'get_tags', 'published', 'description',
+    list_display = ('id', 'name', 'slug', 'url', 'get_tags', 'published',
                     'created_at', 'updated_at',)
-    list_display_links = ('id', 'name', 'organization', )
+    list_display_links = ('id', 'name',)
     search_fields = ('id', 'name', 'url', 'slug',
                      'organization__name', 'tags__name', 'description',)
     
