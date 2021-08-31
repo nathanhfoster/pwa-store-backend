@@ -7,7 +7,7 @@ from rest_framework import authentication, permissions, status
 from pwa_store_backend.users.models import User
 import re
 
-manifest_regex = r"\/manifest.json([^&]*)"
+manifest_regex = r"\/manifest.([^&]*)"
 
 class PwaInfoView(APIView):
     """
