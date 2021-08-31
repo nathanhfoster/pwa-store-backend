@@ -86,19 +86,8 @@ class PwaSerializer(ModelSerializer):
             obj.save()
         return obj
 
-class JSONSerializerField(JSONField):
-    def to_internal_value(self, data):
-        return data
-    def to_representation(self, value):
-        return value
 
 class PwaDetailSerializer(PwaSerializer):
-    manifest_json = JSONSerializerFiel(required=False, allow_null=True)
-
-    def to_representation(self, instance):
-        ret = super(PwaDetailSerializer, self).to_representation(instance)
-        ret['manifest_json'] = json.loads(ret['manifest_json'])
-        return ret
 
     class Meta(PwaSerializer.Meta):
         fields = PwaSerializer.Meta.fields + ('created_by', 'manifest_json',)

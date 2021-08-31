@@ -83,6 +83,10 @@ class PwaViewSet(ModelViewSet):
             self.permission_classes = (AllowAny,)
         return super(PwaViewSet, self).get_permissions()
 
+    def update(self, request, *args, **kwargs):
+        self.serializer_class = PwaDetailSerializer
+        return super().update(request, *args, **kwargs)
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = PwaDetailSerializer(instance, context={'request': request})
