@@ -83,6 +83,11 @@ class PwaViewSet(ModelViewSet):
             self.permission_classes = (AllowAny,)
         return super(PwaViewSet, self).get_permissions()
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = PwaDetailSerializer(instance, context={'request': request})
+        return Response(serializer.data)
+
     @action(methods=['patch'], detail=False, url_path="analytics-counter", permission_classes=[AllowAny, ])
     def increase_counts(self, request):
         data = json.loads(request.body)
@@ -98,7 +103,7 @@ class PwaViewSet(ModelViewSet):
         except Exception as e:
             return Response(status=status.HTTP_404_NOT_FOUND)
         qs = self.get_queryset()
-        serializer = PwaDetailSerializer(qs.get(slug=data.get('slug')), context={'request': request})
+        serializer = PwaSerializer(qs.get(slug=data.get('slug')), context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     @action(methods=['post'], detail=False, url_path="post-rating")

@@ -96,4 +96,4 @@ class PwaDetailSerializer(PwaSerializer):
         return ret
 
     class Meta(PwaSerializer.Meta):
-        fields = PwaSerializer.Meta.fields + ('manifest_json',)
+        fields = PwaSerializer.Meta.fields + ('created_by', 'manifest_json',)
