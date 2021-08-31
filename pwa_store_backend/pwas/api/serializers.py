@@ -92,7 +92,10 @@ class PwaDetailSerializer(PwaSerializer):
 
     def to_representation(self, instance):
         ret = super(PwaDetailSerializer, self).to_representation(instance)
-        ret['manifest_json'] = json.loads(ret['manifest_json'])
+        try:
+            ret['manifest_json'] = json.loads(ret['manifest_json'])
+        except ValueError as e:
+            ret['manifest_json'] = dict
         return ret
 
     class Meta(PwaSerializer.Meta):
