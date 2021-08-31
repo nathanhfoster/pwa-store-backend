@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, JSONField
+from rest_framework.serializers import ModelSerializer, JSONField, Field
 from pwa_store_backend.users.models import User
 from ..models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
 from ...organizations.models import Organization
@@ -86,9 +86,14 @@ class PwaSerializer(ModelSerializer):
             obj.save()
         return obj
 
+class JSONSerializerField(JSONField):
+    def to_internal_value(self, data):
+        return data
+    def to_representation(self, value):
+        return value
 
 class PwaDetailSerializer(PwaSerializer):
-    manifest_json = JSONField(required=False, allow_null=True)
+    manifest_json = JSONSerializerFiel(required=False, allow_null=True)
 
     def to_representation(self, instance):
         ret = super(PwaDetailSerializer, self).to_representation(instance)
