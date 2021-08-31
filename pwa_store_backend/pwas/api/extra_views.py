@@ -17,8 +17,9 @@ class PwaInfoView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_manifest(self, url):
-        r = requests.get(url)
+        r = requests.get(url, timeout=8)
         json_response = r.json()
+   
         final_response = {
           "manifest_url": url,
           "manifest_json": json_response,
