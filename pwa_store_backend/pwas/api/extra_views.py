@@ -28,8 +28,14 @@ class PwaInfoView(APIView):
 
     def get(self, request, format=None):
         url = request.query_params.get('url')
+        
         try:
-            return self.get_manifest(url if re.search(manifest_regex, url) else F"{url}/manifest.json")
+            return self.get_manifest(url if re.search(manifest_regex, url) else F"{url}manifest.json")
+        except Exception as e:
+            print("Error", e)
+       
+        try:
+            return self.get_manifest(F"{url}manifest.webmanifest")
         except Exception as e:
             print("Error", e)
 
@@ -41,6 +47,6 @@ class PwaInfoView(APIView):
             if 'http' in manifest_url:
                 return self.get_manifest(manifest_url)
             else:
-                return self.get_manifest(F"{url}manifest_url")
+                return self.get_manifest(F"{url}{manifest_url}")
         except Exception as e:
             return Response({"error": "Invalid URL"}, status=status.HTTP_406_NOT_ACCEPTABLE)
