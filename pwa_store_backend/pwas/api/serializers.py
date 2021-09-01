@@ -90,4 +90,4 @@ class PwaSerializer(ModelSerializer):
 class PwaDetailSerializer(PwaSerializer):
 
     class Meta(PwaSerializer.Meta):
-        fields = PwaSerializer.Meta.fields + ('created_by', 'manifest_json',)
+        fields = PwaSerializer.Meta.fields + ('created_by', 'updated_by', 'manifest_json',)
