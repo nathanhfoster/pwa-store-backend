@@ -47,7 +47,6 @@ class PwaOrganizationSerializer(ModelSerializer):
 
 
 class PwaMinimalSerializer(ModelSerializer):
-    # tags = TagSerializer(many=True, read_only=True, required=False)
 
     class Meta:
         model = Pwa

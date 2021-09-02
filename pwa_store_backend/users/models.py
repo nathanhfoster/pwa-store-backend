@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from pwa_store_backend.pwas.models import Pwa
 from django.db.models import (
     CharField,
     ForeignKey,
@@ -11,7 +10,9 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import pre_init, pre_save, post_save
 from django.conf import settings
+
 from pwa_store_backend.utils.models import TimeStampAbstractModel, TimeStampAbstractModel, AbstractArchivedModel
+from pwa_store_backend.pwas.models import Pwa
 
 
 class UserSetting(TimeStampAbstractModel):

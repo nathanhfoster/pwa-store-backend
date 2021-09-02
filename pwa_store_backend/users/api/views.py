@@ -96,3 +96,17 @@ class FavoritePwaViewSet(ModelViewSet):
             self.permission_classes = (
                 IsAuthenticated,)
         return super(FavoritePwaViewSet, self).get_permissions()
+
+    def create(self, request, *args, **kwargs):
+        try:
+            data = request.data
+            pwa = get_object_or_404(Pwa, slug=data.get('pwa_slug'))
+            fav = FavoritePwa(
+              pwa=pwa,
+              user=request.user
+            )
+            fav.save()
+            serializer = self.get_serializer(fav)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": e}, status=status.HTTP_400_BAD_REQUEST)
