@@ -38,7 +38,7 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     url = CharField(validators=[MinLengthValidator(13)], max_length=250, unique=True)
     manifest_url = CharField(validators=[MinLengthValidator(5)], max_length=250, null=True)
     manifest_json = JSONField(default=dict)
-    slug = SlugField(validators=[MinLengthValidator(3)], max_length=50, null=True, unique=True, blank=True)
+    slug = SlugField(validators=[MinLengthValidator(2)], max_length=50, null=True, unique=True, blank=True)
     organization = ForeignKey(
         Organization,
         related_name='organization',
