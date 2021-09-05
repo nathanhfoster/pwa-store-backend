@@ -46,8 +46,12 @@ class RatingViewSet(ModelViewSet):
             instance = get_object_or_404(Rating, id=kwargs.get('pk'))
             # update analytics first
             analytic = get_object_or_404(PwaAnalytics, pwa=instance.pwa)
-            analytic.rating_avg = (analytic.rating_avg * analytic.rating_count - instance.rating) / (analytic.rating_count - 1)
-            analytic.rating_count -= 1
+            if analytic.rating_count == 1:
+                analytic.rating_count = 0
+                analytic.rating_avg = 0
+            else:
+                analytic.rating_avg = (analytic.rating_avg * analytic.rating_count - instance.rating) / (analytic.rating_count - 1)
+                analytic.rating_count -= 1
 
             instance.comment = data.get('comment')
             instance.rating = data.get('rating')
