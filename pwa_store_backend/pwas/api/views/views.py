@@ -1,16 +1,16 @@
+import json
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
-import json
 from django.shortcuts import get_object_or_404
 from rest_framework import status, pagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from ..models import Pwa, Rating, Tag, PwaAnalytics
-from .serializers import PwaSerializer, PwaDetailSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
+from ...models import Pwa, Rating, Tag, PwaAnalytics
+from ..serializers import PwaSerializer, PwaDetailSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
 from pwa_store_backend.utils.pagination import StandardResultsSetPagination
 
 
@@ -101,58 +101,3 @@ class PwaViewSet(ModelViewSet):
         qs = self.get_queryset()
         serializer = PwaSerializer(qs.get(slug=data.get('slug')), context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-    @action(methods=['post'], detail=False, url_path="post-rating")
-    def post_rating(self, request):
-        data = request.data
-        pwa_id = data.get('pwa_id')
-        rating = data.get('rating')
-        comment = data.get('comment')
-        created_by = request.user
-        updated_by = created_by
-        try:
-            obj = Rating(
-                pwa_id=pwa_id,
-                rating=rating,
-                comment=comment,
-                created_by=created_by,
-                updated_by=updated_by
-            )
-            obj.save()
-            # update analytics
-            analytic = get_object_or_404(PwaAnalytics, pwa_id=pwa_id)
-            analytic.rating_count += 1
-            analytic.rating_avg = (analytic.rating_avg + obj.rating) / analytic.rating_count
-            analytic.save()
-
-            serializer = RatingSerializer(obj, context={'context': request})
-            return Response(status=status.HTTP_200_OK, data=serializer.data)
-        except Exception as e:
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)
-
-    @action(methods=['patch'], detail=True, url_path="patch-rating")
-    def patch_rating(self, request, pk):
-        data = request.data
-        pwa_id = data.get('pwa_id')
-        rating = data.get('rating')
-        comment = data.get('comment')
-        created_by = request.user
-        updated_by = created_by
-
-        try:
-            obj = Rating.objects.get(pk=pk, created_by=created_by)
-            past_rating = obj.rating
-            obj.updated_by = updated_by
-            obj.rating = rating
-            obj.comment = comment
-            obj.save()
-            # update analytics
-            analytic = get_object_or_404(PwaAnalytics, pwa_id=pwa_id)
-            analytic.rating_avg -= past_rating
-            analytic.rating_avg = (analytic.rating_avg + obj.rating) / analytic.rating_count
-            analytic.save()
-
-            serializer = RatingSerializer(obj, context={'context': request})
-            return Response(status=status.HTTP_200_OK, data=serializer.data)
-        except Exception as e:
-            return Response(status=status.HTTP_406_NOT_ACCEPTABLE)

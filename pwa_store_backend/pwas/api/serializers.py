@@ -1,6 +1,8 @@
 from rest_framework.serializers import ModelSerializer, JSONField, Field
 from pwa_store_backend.users.models import User
+from rest_framework import serializers
 from ..models import Pwa, Rating, Tag, PwaScreenshot, PwaAnalytics
+from pwa_store_backend.users.models import User
 from ...organizations.models import Organization
 import json
 
@@ -23,8 +25,13 @@ class RatingSerializer(ModelSerializer):
 
     class Meta:
         model = Rating
-        fields = ('id', 'created_by', 'rating', 'comment', 'updated_at',)
-        read_only_fields = ('id', 'pwa', 'created_at', 'updated_at')
+        fields = '__all__'
+        read_only_fields = ('id', 'created_at', 'updated_at')
+
+    # def __init__(self, *args, **kwargs):
+    #     super(RatingSerializer, self).__init__(*args, **kwargs)
+    #     if kwargs.get('context', None) and kwargs.get('context').get('request').method == 'GET':
+    #         self.fields['created_by'] = RatingUserField()
 
 
 class PwaScreenshot(ModelSerializer):

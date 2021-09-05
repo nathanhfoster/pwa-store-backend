@@ -16,7 +16,6 @@ from pwa_store_backend.organizations.models import Organization
 from django.core.validators import MaxValueValidator, MinValueValidator
 from pwa_store_backend.utils.models import TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel
 from django.core.validators import MinLengthValidator
-from pwa_store_backend.utils.validators import validate_json
 from django.core.exceptions import ValidationError
 import json
 
@@ -54,10 +53,6 @@ class Pwa(TimeStampAbstractModel, AbstractArchivedModel, OwnerAbstractModel):
     image_url = CharField(max_length=250, null=True, blank=True)
     description = TextField(max_length=1000, null=True, blank=True)
     published = BooleanField(default=False)  # to filter whether to show pwa in the marketplace
-
-    def clean(self):
-        if validate_json(self.manifest_json):
-            raise ValidationError("manifest_json is not a valid JSON")
 
     def __str__(self):
         return self.name

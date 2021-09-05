@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .api.views import PwaViewSet, TagViewSet, RatingViewSet
+from .api.views.views import PwaViewSet, TagViewSet, RatingViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()

@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter, SimpleRouter
 
 from pwa_store_backend.users.api.views import UserViewSet, FavoritePwaViewSet
 from pwa_store_backend.organizations.api.views import OrganizationViewSet
-from pwa_store_backend.pwas.api.views import PwaViewSet, TagViewSet
+from pwa_store_backend.pwas.api.views.views import PwaViewSet, TagViewSet
 
 if settings.DEBUG:
     router = DefaultRouter()
@@ -14,11 +14,12 @@ else:
 router.register("users", UserViewSet)
 router.register('favorites', FavoritePwaViewSet)
 router.register("organizations", OrganizationViewSet)
-router.register("pwas", PwaViewSet)
 router.register("tags", TagViewSet)
+
+router.urls
 
 app_name = "api"
 urlpatterns = router.urls + [
-  path('pwas/extra/', include("pwa_store_backend.pwas.api.urls")),
+  path('', include("pwa_store_backend.pwas.api.urls")),
   path('auth/', include("pwa_store_backend.users.api.urls")),
 ]
