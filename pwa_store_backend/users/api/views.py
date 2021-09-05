@@ -14,7 +14,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import UserSerializer, UserSettingSerializer, FavoritePwaSerializer, FavoritePwaSerializer
 from pwa_store_backend.pwas.models import Pwa
 from pwa_store_backend.pwas.api.serializers import PwaSerializer
-
+from pwa_store_backend.utils.pagination import StandardResultsSetPagination
 
 def get_user_response(token, user):
     update_last_login(None, user)
@@ -37,6 +37,7 @@ def get_user_response(token, user):
 class UserViewSet(ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
+    pagination_class = StandardResultsSetPagination
 
     def get_queryset(self, *args, **kwargs):
         return self.queryset.filter(id=self.request.user.id)
@@ -46,10 +47,17 @@ class UserViewSet(ModelViewSet):
         serializer = UserSerializer(request.user, context={"request": request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
-    @action(methods=['get'], detail=True, permission_classes=[IsAuthenticated])
-    def pwas(self, request, pk):
-        queryset = Pwa.objects.all().filter(created_by=pk)
+    @action(methods=['get'], detail=False, permission_classes=[IsAuthenticated])
+    def pwas(self, request):
+        user_id = self.request.user.id
+        queryset = Pwa.objects.all().filter(created_by=user_id)
         serializer = PwaSerializer(queryset, many=True)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = PwaSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+       
         return Response(serializer.data)
 
 

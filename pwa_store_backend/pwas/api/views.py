@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.filters import SearchFilter
-import requests
 import json
 from django.shortcuts import get_object_or_404
 from rest_framework import status, pagination
@@ -12,18 +11,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from ..models import Pwa, Rating, Tag, PwaAnalytics
 from .serializers import PwaSerializer, PwaDetailSerializer, RatingSerializer, TagSerializer, PwaAnalyticsSerializer
-
-
-class StandardResultsSetPagination(pagination.PageNumberPagination):
-    page_size = 25
-    page_size_query_param = 'page_size'
-    max_page_size = 500
-
-
-class LargeResultsSetPagination(pagination.PageNumberPagination):
-    page_size = 50
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
+from pwa_store_backend.utils.pagination import StandardResultsSetPagination
 
 
 class TagViewSet(ModelViewSet):
