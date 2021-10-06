@@ -55,15 +55,15 @@ class PwaViewSet(ModelViewSet):
     pagination_class = StandardResultsSetPagination
     lookup_field = 'slug'
     permission_classes = (IsAuthenticated,)
-    filter_backends = (SearchFilter, )
+    filter_backends = (SearchFilter,)
     search_fields = ['name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description', ]
 
     def get_queryset(self):
         if self.request.parser_context['kwargs'].get('slug', None):
-            qs = super().get_queryset().select_related('pwa_analytics', 'organization')
+            qs = super().get_queryset()
         else:
-            qs = super().get_queryset().filter(published=True).select_related('pwa_analytics', 'organization')
-        return qs
+            qs = super().get_queryset().filter(published=True)
+        return qs.select_related('pwa_analytics', 'organization')
 
     def get_permissions(self):
         # allow an authenticated user to create via POST
