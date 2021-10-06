@@ -16,5 +16,5 @@ router.register('pwas', PwaViewSet)
 router.register('ratings', RatingViewSet)
 
 urlpatterns = router.urls + [
-    path("info", view=PwaInfoView.as_view(), name="info"),
+    path("pwas/extra/info", view=PwaInfoView.as_view(), name="info"),
 ]
