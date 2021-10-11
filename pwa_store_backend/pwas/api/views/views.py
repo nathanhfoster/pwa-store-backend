@@ -28,27 +28,6 @@ class TagViewSet(ModelViewSet):
                 IsAuthenticated,)
         return super(TagViewSet, self).get_permissions()
 
-
-class RatingViewSet(ModelViewSet):
-    serializer_class = RatingSerializer
-    queryset = Rating.objects.all()
-    permission_classes = (IsAuthenticated,)
-
-    def get_permissions(self):
-        # allow an authenticated user to create via POST
-        if self.request.method == 'GET':
-            self.permission_classes = (AllowAny,)
-        if self.request.method == 'PATCH':
-            self.permission_classes = (
-                IsAuthenticated,)
-        return super(RatingViewSet, self).get_permissions()
-
-    @action(detail=False, methods=["GET"])
-    def me(self, request):
-        serializer = TagSerializer(request.user, context={"request": request})
-        return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-
 class PwaViewSet(ModelViewSet):
     serializer_class = PwaSerializer
     queryset = Pwa.objects.all()
