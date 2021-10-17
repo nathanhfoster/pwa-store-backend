@@ -35,7 +35,7 @@ class PwaViewSet(ModelViewSet):
     lookup_field = 'slug'
     permission_classes = (IsAuthenticated,)
     filter_backends = (SearchFilter,)
-    search_fields = ['name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description', ]
+    search_fields = ['slug', 'name', 'url', 'description', 'tags__name', 'organization__name', 'organization__description', 'manifest_json',]
 
     def get_queryset(self):
         if self.request.parser_context['kwargs'].get('slug', None):
